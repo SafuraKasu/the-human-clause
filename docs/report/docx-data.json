@@ -1,0 +1,131 @@
+{
+ "title": "AI for Good Sandbox Hackathon – [TEAM NAME] – The Human Clause",
+ "team": {
+  "name": "[TEAM NAME]",
+  "leader": "[TEAM LEADER]",
+  "members": "[TEAM MEMBERS]",
+  "contact": "[CONTACT DETAILS]",
+  "github": "https://github.com/SafuraKasu/the-human-clause"
+ },
+ "sections": [
+  {
+   "heading": "1. Introduction",
+   "paras": [
+    "The Human Clause is an agentic AI prototype for medication safety across hospitals in different emirates. A deterministic safety engine finds interaction, duplication, contraindication and lab-dependent risks; a Policy agent retrieves what UAE federal, Dubai and Abu Dhabi rules say about each step; a consent module decides what may be shared; and a plain-Python Orchestrator coordinates them and records every handoff in an audit trail. Where rules conflict, are silent or leave jurisdiction unclear, the system says so and the finding becomes a documented policy gap. The report maps the pipeline to ITU-T Y.3172 and the AI Readiness Framework 2.0 and to the 14 published UAE, EU and ITU documents in the knowledge base. All patient data is synthetic."
+   ]
+  },
+  {
+   "heading": "2. Description of the use case",
+   "paras": [
+    "Healthcare, medication safety. Patients with several chronic conditions are treated by multiple hospitals, each holding a separate record. Existing interaction checkers examine isolated drug pairs from one record and ignore what decides whether anything may lawfully be done: the patient's consent and the differing rules of each emirate. Our demonstration patient, Fatima Hassan (72, synthetic), has kidney disease, diabetes, hypertension, atrial fibrillation and a penicillin allergy, with prescriptions from Hospitals A and C (Abu Dhabi) and B (Dubai).",
+    "The solution (1) joins records only where consent allows, (2) checks them with reproducible rules that flag missing data instead of guessing, (3) cites the rules governing each step, and (4) escalates to a human when rules conflict. It closes the gaps of isolated checks and policy-blind AI by making policy grounding, consent and auditability part of the pipeline."
+   ]
+  },
+  {
+   "heading": "3. Use case requirements",
+   "bullets": [
+    "**R1** (SRC, P): Share a patient's medication data across hospitals only on the patient's authority, per category and purpose, with expiry.",
+    "**R2** (PP, P): Honour withdrawal of consent and opt-out from a health information exchange, and say so when an assessment becomes incomplete.",
+    "**R3** (M): Detect medication-safety issues deterministically (interactions, duplication, contraindications, lab-dependent rules), never guess missing data, never present 'no issue found' as proof of safety.",
+    "**R4** (P, SINK): Handle emergency access under explicit rules: allowed only with justification, always flagged, escalated to a human when rules conflict.",
+    "**R5** (M, P): Ground every policy statement in a retrievable source passage; report conflicts, unclear scope and gaps honestly.",
+    "**R6** (D): Keep an inspectable audit trail of decisions, evidence, rule checks and handoffs (no hidden reasoning).",
+    "**R7** (SINK): Keep AI supervised: advisory only, overridable by humans, no clinical action taken automatically.",
+    "**R8** (C): Respect data-location limits: no real patient data leaves the State; the prototype uses synthetic data only."
+   ]
+  },
+  {
+   "heading": "4. Mapping with ITU-T Y.3172, the Readiness 2.0 report and domain-specific policies",
+   "table": {
+    "cols": [
+     "Y.3172 node",
+     "Use case (Human Clause)",
+     "Readiness 2.0 report",
+     "Documents (verified in ingested text)"
+    ],
+    "widths": [
+     800,
+     3300,
+     2200,
+     3060
+    ],
+    "rows": [
+     [
+      "SRC",
+      "Hospital A/B/C record uploads and lab results (synthetic). **[simulated]**",
+      "Dim 1 Data/model Marketplace; Data Governance",
+      "ICT Health Law Art. 16; DHA Sharing Policy 4.8.5; DoH HIE Policy 4.2.1.2"
+     ],
+     [
+      "C",
+      "Records are ingested as events arrive; the Orchestrator releases one event at a time. Runs locally; the LLM is a free cloud service. **[simulated]**",
+      "Dim 13 Digital Infrastructure (not assessed)",
+      "ICT Health Law Art. 13 (data location)"
+     ],
+     [
+      "PP",
+      "Brand-to-ingredient normalization; status filtering; sources the patient withdrew are excluded before any assessment. **[implemented]**",
+      "Data Interoperability; Dim 4 Contextualization and Regional Impact",
+      "DHA Sharing Policy 4.5.5 (minimum necessary); DHA Consent Standard 9.4"
+     ],
+     [
+      "M",
+      "Deterministic safety engine on a demonstration KB (no trained ML model). An LLM explains findings and reasons over retrieved policy text. **[partial]**",
+      "Dim 2 Generated Content Marketplace; Factor Standards",
+      "DHA AI Policy 4.3.3 (NOT met); DHA AI Policy 4.4.1"
+     ],
+     [
+      "P",
+      "Consent module and Policy agent decide what may be used or shown. A blocked emergency request escalates to a human. **[implemented]**",
+      "Dim 10 AI & Policies; Dim 7 Strategy Alignment",
+      "Executive Regulation Art. 6(3); ICT Health Law Art. 16(3); DHA Consent Standard 17.2.1 and 9.7; DoH HIE Policy 6.1.4"
+     ],
+     [
+      "D",
+      "Orchestrator routes results and records every handoff in an append-only audit trail (not tamper-proof storage). **[partial]**",
+      "Dim 5 Level of Integration of AI in Workflows; Dim 3 Cross-domain correlation analysis",
+      "DHA Consent Standard 17.6; DoH HIE Policy 6.1.3.13"
+     ],
+     [
+      "SINK",
+      "Human review: output is advisory, nothing acts automatically. No accountability agreement or appeals procedure yet. **[implemented]**",
+      "Dim 6 Human Interface; Dim 8 Collaboration with AI; Dim 9 Impacts of Humans in AI Integration",
+      "DHA AI Policy 4.4.2 (override); DHA AI Policy 4.2.3 (appeals, NOT met)"
+     ],
+     [
+      "MLFO and ML sandbox",
+      "Plain-Python Orchestrator; scenario replay on synthetic hospitals with expected-versus-actual evaluation. Nothing is deployed live. **[partial]**",
+      "Factor Sandbox",
+      "DHA AI Policy 4.4.1"
+     ]
+    ]
+   },
+   "paras": [
+    "Y.3172 addresses machine learning in future networks (IMT-2020). We apply its pipeline concepts by analogy to a health-data agent system; the mapping explains how our architecture corresponds to it and does not claim network-level conformance. Not addressed: Dim 11 AI for Inclusion (no Arabic or accessibility work) and energy use; the UAE AI Strategy 2031 is in the knowledge base but the scenario does not yet exercise it."
+   ]
+  },
+  {
+   "heading": "5. Error scenarios",
+   "paras": [
+    "Events are released one at a time; each has an expected outcome written before any agent existed. Recorded live run (gemini-3.1-flash-lite): 42 checks pass, 5 fail, 12 need human judgement, 1 hypothesis was not confirmed at its expected event.",
+    "**Step 1 (11/02).** Hospitals A and C upload warfarin, ramipril and metformin; no lab results are on file. **Observed:** Safety: Missing egfr result for Glucophage (informational). Consent: GRANTED.",
+    "**Step 2 (11/03).** Hospital B (Dubai) adds spironolactone. **Observed:** Safety: Ramipril + spironolactone: interaction (high); Missing egfr result for Glucophage (informational); Missing potassium result for Aldactone (informational). Consent: GRANTED, GRANTED. Policy agent: 2 searches, cited 3 documents, gaps raised: Lack of explicit rules on cross-emirate HIE interoperability.",
+    "**Step 3 (11/06).** Overdue results (eGFR 24, potassium 5.4) arrive three days late. **Observed:** Safety: Ramipril + spironolactone: interaction (high); Glucophage: egfr outside the safe range for this medicine (high); Aldactone: potassium outside the safe range for this medicine (high).",
+    "**Step 4 (11/07).** The patient withdraws consent for Hospital B's data and opts out of Dubai's exchange (NABIDH). **Observed:** Safety: Glucophage: egfr outside the safe range for this medicine (high). The assessment states it is incomplete (data withheld by the patient). Consent: REVOKED, OPTED_OUT_OF_EXCHANGE. Policy agent: 2 searches, cited 2 documents, gaps raised: Applicability of Opt-Out to Abu Dhabi (Malaffi).",
+    "**Step 5 (11/08).** Emergency: an Abu Dhabi clinician requests Hospital B's medication list by break-the-glass; the patient has opted out. **Observed:** Safety: Glucophage: egfr outside the safe range for this medicine (high). The assessment states it is incomplete (data withheld by the patient). Consent: EMERGENCY_BLOCKED_BY_OPT_OUT. Escalated to a human. Policy agent: 3 searches, cited 3 documents, gaps raised: Cross-emirate emergency access procedures.",
+    "**Step 6 (11/08).** Hospital C asks which institution must coordinate follow-up of the high-severity findings. **Observed:** Safety: Glucophage: egfr outside the safe range for this medicine (high). The assessment states it is incomplete (data withheld by the patient). Policy agent: 7 searches, cited 1 document, gaps raised: Responsibility for cross-emirate clinical coordination; Impact of patient-withheld data on clinical responsibility.",
+    "**Review of the non-passes.** Expectations were not changed after the run. Of the 5 failed checks, 4 cited a different valid provision than the one we named (for example Executive Regulation Art. 6(3) for emergency access, and Abu Dhabi's break-the-seal rule that we had not scripted), and one did not cite the Dubai scope clause although the agent raised the scope question. The unconfirmed hypothesis was raised at a different event. Each was checked against the source text."
+   ]
+  },
+  {
+   "heading": "6. Policy gaps and standards gaps derived from the mapping exercise",
+   "paras": [
+    "**G1. Patients in different emirates get different consent and opt-out rights.** Dubai's 2025 standard gives patients a right to withdraw and opt out of the health information exchange. Abu Dhabi's 2020 exchange policy makes participation mandatory, authorizes sharing where consent is unavailable, and contains no opt-out provision (full-text scan: zero hits). The federal data-protection law's general right to withdraw consent cannot be assumed to fill the gap, because it excludes personal health data that has its own regulating legislation. (Full-text check: occurrences of 'opt-out' in the Abu Dhabi HIE policy = 0.) **Recommendation:** Publish a federal or inter-emirate rule on whether and how an opt-out registered in one emirate binds exchanges in another.",
+    "**G2. Emergency access to an opted-out patient's records across emirates is unresolved.** The Dubai standard says an opted-out patient's data should not be retrieved by break-the-glass. The federal Executive Regulation and the ICT Health Law allow access in an emergency or to protect the patient's health and safety, and Abu Dhabi has its own 'break the seal' rule. The Dubai standard's scope is PHI within Dubai. No ingested provision says which rule governs a clinician in one emirate requesting an opted-out patient's data held in another. **Recommendation:** State, in federal guidance, whether an opt-out can be overridden for vital interests and which emirate's emergency rule applies to cross-emirate requests. The EU resolves the same question explicitly in EHDS Art. 10.",
+    "**G3. No ingested provision assigns responsibility for cross-institution follow-up.** No ingested UAE text assigns responsibility for coordinating follow-up on high-severity medication findings that span prescribers in different emirates. Full-text scans find no 'medication reconciliation' or 'responsible for coordinating' anywhere. The nearest provisions concern exchange interoperability and referral data, not who acts on a finding. (Full-text check: occurrences of 'medication reconciliation' across all ingested UAE texts = 0; occurrences of 'responsible for coordinating' across all ingested UAE texts = 0.) **Recommendation:** Define which institution (for example the most recent prescriber or the patient's primary care provider) owns the response to a cross-institution medication-safety finding.",
+    "**G4. No ingested provision addresses externally hosted AI processing of health data.** The ICT Health Law restricts storing or processing health data outside the State unless a Health Authority resolution allows it. The Dubai AI policy requires AI solutions to comply with that law but never mentions cloud, location or localization (full-text scan: zero hits), and the instrument that lists exceptions (Ministerial Decision 51 of 2021) is not in our KB. Whether an externally hosted LLM can lawfully process real patient data is therefore not answered by the ingested texts. (Full-text check: occurrences of outside/cloud/localization in the Dubai AI policy = 0.) **Recommendation:** Clarify how Art. 13 applies to AI services hosted abroad, and publish the exceptions in one place alongside the AI policies.",
+    "**Limitations.** The medication knowledge base is a small team-curated demonstration set, not clinically validated or reviewed by a clinician. There is no independent validation, authentication, encryption or tamper-proof logging, and no real hospital integration. The language model is a free-tier Gemini model; the recorded run was served by gemini-3.1-flash-lite because the primary model's daily free quota was spent, and the run is replayable from a cached record. Policy texts are English only. Not ingested: Abu Dhabi's AI policy and Responsible AI Standard (download failed) and Ministerial Decision 51 of 2021. Policy findings summarise what the texts say; they are not legal advice, and absence in our knowledge base is not absence in law."
+   ]
+  }
+ ]
+}

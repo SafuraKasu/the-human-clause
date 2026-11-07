@@ -1,5 +1,5 @@
 {
- "model": "gemini-3.5-flash",
+ "model": "gemini-3.1-flash-lite",
  "request": {
   "messages": [
    {
@@ -19,16 +19,16 @@
   "choices": [
    {
     "message": {
-     "content": "{\"summary\": \"A medication safety concern was identified for Glucophage based on your kidney function test. Additionally, some health records were withheld, so this assessment is incomplete.\", \"explanations\": [{\"finding_id\": \"DEMO-LAB-001:glucophage\", \"plain_language\": \"Glucophage is generally not used when kidney function is below 30 due to the risk of lactic acidosis. Your recorded kidney function level is 24. Please contact your prescribing doctor or a pharmacist promptly to discuss this. Do not stop taking your medication on your own.\"}]}",
+     "content": "{\n  \"summary\": \"Your recent lab results show that your kidney function is currently below the level where this medication is typically recommended. Because some of your health data is missing, this safety assessment is incomplete.\",\n  \"explanations\": [\n    {\n      \"finding_id\": \"DEMO-LAB-001:glucophage\",\n      \"plain_language\": \"Your recent lab results show your kidney function is below the level where Glucophage is typically recommended. Please contact your doctor or pharmacist to discuss this finding. Do not make any changes to your medication on your own.\"\n    }\n  ]\n}",
      "tool_calls": null
     }
    }
   ],
   "usage": {
-   "completion_tokens": 121,
+   "completion_tokens": 133,
    "prompt_tokens": 372,
-   "total_tokens": 1219
+   "total_tokens": 505
   }
  },
- "cached_at": "2026-11-08T00:29:53"
+ "cached_at": "2026-11-08T00:54:41"
 }

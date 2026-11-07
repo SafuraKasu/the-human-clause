@@ -56,14 +56,14 @@
       {
        "extra_content": {
         "google": {
-         "thought_signature": "EnMKcQFpFH0T1KLuIRnnP4L8dhHixHeBZcq14+9yrNpblcN264hDpxrYVHwoF5Z1lkTFBzG+5yZU1rVis3we5pkF4n/WGTq4Fn+qKVNE4tIPa92yrna6l6i/8q33Qzz4LSiNppraB4m9xSUmFidBqJsHVv/2"
+         "thought_signature": "EnMKcQFpFH0Tdsc2nAlawjglp3gAjfHNIftSqBhoaPqYXpJ94o5ubpqN6aEyreDtbtcipVbJ0tKvdyEbRi8leimlfnnIfTzLVTHe3tRDmdX99GWP0yAGT6LOpsW5/2GBHt12aX1Yi0dq1tmLGMySFHcEdz79"
         }
        },
        "function": {
         "arguments": "{\"query\":\"emergency access break-the-glass opt-out NABIDH\",\"scope\":\"Dubai\"}",
         "name": "search_policy"
        },
-       "id": "call_12857537526973495641",
+       "id": "call_11535417511812947476",
        "type": "function"
       }
      ]
@@ -76,5 +76,5 @@
    "total_tokens": 856
   }
  },
- "cached_at": "2026-11-08T00:34:13"
+ "cached_at": "2026-11-08T00:55:28"
 }

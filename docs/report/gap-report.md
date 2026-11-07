@@ -16,7 +16,7 @@ Dubai's 2025 standard gives patients a right to withdraw and opt out of the heal
 
 **Recommendation:** Publish a federal or inter-emirate rule on whether and how an opt-out registered in one emirate binds exchanges in another.
 
-**Origin:** Hypothesis written before the run; the agent raised a closely related gap at event 2 (cross-emirate consent synchronization). Verified by the team in the source text.
+**Origin:** Hypothesis written before the run. In the final recorded run the agent independently reported, at event 4, that it found no opt-out provision for Abu Dhabi's exchange equivalent to Dubai's, which matches the team's full-text scan. Verified by the team in the source text.
 
 **Caveats:** The Abu Dhabi policy is from April 2020 and may have been superseded. English text only.
 
@@ -50,7 +50,7 @@ No ingested UAE text assigns responsibility for coordinating follow-up on high-s
 
 **Recommendation:** Define which institution (for example the most recent prescriber or the patient's primary care provider) owns the response to a cross-institution medication-safety finding.
 
-**Origin:** Hypothesis written before the run; confirmed by the agent after eight searches, with the team's full-text scans as an independent check.
+**Origin:** Hypothesis written before the run; reported by the agent after a multi-query search (the search log is in the run record), with the team's full-text scans as an independent check.
 
 **Caveats:** Absence in the ingested documents is not proof that no rule exists elsewhere. The EU comparator concerns reporting by digital health authorities, not clinical responsibility.
 

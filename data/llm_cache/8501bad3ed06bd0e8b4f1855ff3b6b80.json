@@ -56,14 +56,14 @@
       {
        "extra_content": {
         "google": {
-         "thought_signature": "EnMKcQFpFH0TFYJuMoeekzXmOUdsv6gNwyWSFheIdMw/DYX42GK0XbD+Jl8rI4AVrqcVB8jK1eQlRukyKYhda1HTQq3QkjtRIyXUmd/U5j5yupSFnZQ3fmZRgqgeTmvcvOiJaBdW38tgOEmYELyq9ld9GCWm"
+         "thought_signature": "EnMKcQFpFH0TNpte8AQiFIsoVWc4oXJ0f2ImRnF4ntAIeRA2HcR5JpUCmJUw6frrYtOGZ6S1YKhmfJF533A/DJNvyM379CTCUhyqOP6nqHJJg+99Vuz+audn8R8OIZFvXCEPy5kWuvz5GeJ5v/SJ5i2Wsyjj"
         }
        },
        "function": {
         "arguments": "{\"query\":\"responsibility for follow-up of high-severity medication findings across emirates\"}",
         "name": "search_policy"
        },
-       "id": "call_9758104295796201962",
+       "id": "call_16770132821477408047",
        "type": "function"
       },
       {
@@ -71,7 +71,7 @@
         "arguments": "{\"query\":\"coordination of care across emirates health data\"}",
         "name": "search_policy"
        },
-       "id": "call_9758104295796202843",
+       "id": "call_16770132821477407920",
        "type": "function"
       },
       {
@@ -79,7 +79,7 @@
         "arguments": "{\"query\":\"patient choice data withholding effect on clinical responsibility\"}",
         "name": "search_policy"
        },
-       "id": "call_9758104295796199628",
+       "id": "call_16770132821477407793",
        "type": "function"
       }
      ]
@@ -92,5 +92,5 @@
    "total_tokens": 749
   }
  },
- "cached_at": "2026-11-08T00:34:59"
+ "cached_at": "2026-11-08T00:56:19"
 }

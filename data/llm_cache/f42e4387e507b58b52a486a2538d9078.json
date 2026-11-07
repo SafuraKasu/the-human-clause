@@ -56,14 +56,14 @@
       {
        "extra_content": {
         "google": {
-         "thought_signature": "EnMKcQFpFH0Tp2LEVjjh2QQBxi7jomqDnpcebCd9D/8rXnjJ6irVZGXx8MtCObPIWXhrSbaMHdnNZ3ECSXzr4QXgIvG42TcWCb72xuEc/vBFgFGeI1cIRT1F7NFuvtPZlIQ//tNvKfM8+dwQaM7STan4eWvd"
+         "thought_signature": "EnMKcQFpFH0TzmEPgYfHVURgVDMkk5S2tZLv36LGPdlrRTN52HKwxndyV3KjxFiFQyVI/3OH+0P4gZbX0wij/Y6Hrcxx4UA7AeiMJiRMEEY4o4OPlotHSvKHpCO/kLtoLpDYWM0UQE96yLp18Q816nMFqS6G"
         }
        },
        "function": {
         "arguments": "{\"query\":\"health data sharing patient consent Dubai Abu Dhabi federal\"}",
         "name": "search_policy"
        },
-       "id": "call_2938610713566009224",
+       "id": "call_8115172399345386956",
        "type": "function"
       }
      ]
@@ -76,5 +76,5 @@
    "total_tokens": 790
   }
  },
- "cached_at": "2026-11-08T00:32:46"
+ "cached_at": "2026-11-08T00:53:45"
 }

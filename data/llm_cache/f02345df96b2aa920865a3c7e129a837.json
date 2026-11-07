@@ -1,5 +1,5 @@
 {
- "model": "gemini-3.5-flash",
+ "model": "gemini-3.1-flash-lite",
  "request": {
   "messages": [
    {
@@ -56,14 +56,14 @@
       {
        "extra_content": {
         "google": {
-         "thought_signature": "Er4DCrsDAWkUfRMG6SOTtFdg3kCDjkTWwUCn1ac6JfPih356abKv5jbVHKjnOUBrzR5hqfmMiAGbX4J2fIr+UhCavHti5bnxyoGx/ErRJ6t14PWMgwD0vO/uNmGwwH3bfKjlLTuNLIN4drdhF57oSnK7zOHhpGDIzURXU8rxDtlvOs4fRQptV6lJl6sTnEKO/rffyAHCxFYr0FYrKJfIymvHcuVOsPo8nDCZ5DDMh0n7f/zE0kucOXY4cLWE6rKo9un4uyUzbhH81sNTrUWpxtH41UTNguvUJX3rPI8NUx56W6JtEp914G0JHcDQewGlh/XnNEtImGLOWQqnETLv1w2I+qki2n7UITyHnQvi6j9beXHDZp9rDTdhFlf2b6FgqpSE38UHauDyStSMO0DDGw6DmMrWYjNcDlp+W2+sCcWT4ltA5VMWqbAIvI93GbDetDFsGx2/nQt+Xss7Ox0bxcGbqpH2eE0ketHUv0mkuiT5gAM2eHvuKa+9TtyUr1VFzmBkTOOFvPjwubsAGdm339BkWModZ/sdkwhAGeJwpCrHOUmgGtVovoijtx5LeL0bkYSphoIOjvH6lfrEqvH7XBc="
+         "thought_signature": "EnMKcQFpFH0TfI/+LET0WvFxSRqLJVugU8UTB0l5RRXwOHUufOmTZJtUMIJIew0aQHxWXSWORuUc1w+9vmoHrEtVuobWChRvK5zn3wCLZDxkq4TUoVl4byMf2VyzSIqlK4CpnTl/DdrXQj/l/hPsK8GGCB03"
         }
        },
        "function": {
-        "arguments": "{\"query\":\"consent withdrawal revocation effect already shared prior processing\"}",
+        "arguments": "{\"scope\":\"Dubai\",\"query\":\"withdrawal of consent health data Dubai NABIDH\"}",
         "name": "search_policy"
        },
-       "id": "call_7095115391585427347",
+       "id": "call_14311420441142260899",
        "type": "function"
       }
      ]
@@ -71,10 +71,10 @@
    }
   ],
   "usage": {
-   "completion_tokens": 23,
+   "completion_tokens": 30,
    "prompt_tokens": 782,
-   "total_tokens": 881
+   "total_tokens": 812
   }
  },
- "cached_at": "2026-11-08T00:33:26"
+ "cached_at": "2026-11-08T00:54:50"
 }

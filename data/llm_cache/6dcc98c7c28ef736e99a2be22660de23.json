@@ -1,5 +1,5 @@
 {
- "model": "gemini-3.5-flash",
+ "model": "gemini-3.1-flash-lite",
  "request": {
   "messages": [
    {
@@ -19,16 +19,16 @@
   "choices": [
    {
     "message": {
-     "content": "{\"summary\": \"We reviewed your medication record and identified missing lab information.\", \"explanations\": [{\"finding_id\": \"MISSING:DEMO-LAB-001:glucophage\", \"plain_language\": \"Glucophage dosing depends on kidney function, and your record is missing a recent eGFR test result. Please speak with your doctor or pharmacist to arrange or share this lab result. Do not change your medication on your own.\"}]}",
+     "content": "{\n  \"summary\": \"We have identified a piece of information that is currently missing from your health record regarding your medication.\",\n  \"explanations\": [\n    {\n      \"finding_id\": \"MISSING:DEMO-LAB-001:glucophage\",\n      \"plain_language\": \"Your doctor needs to know your recent kidney function test results to manage your Glucophage safely. We do not have a recent eGFR result on file. Please contact your doctor or pharmacist to discuss this and do not make any changes to your medication on your own.\"\n    }\n  ]\n}",
      "tool_calls": null
     }
    }
   ],
   "usage": {
-   "completion_tokens": 93,
+   "completion_tokens": 129,
    "prompt_tokens": 320,
-   "total_tokens": 1114
+   "total_tokens": 449
   }
  },
- "cached_at": "2026-11-08T00:29:05"
+ "cached_at": "2026-11-08T00:53:28"
 }

@@ -154,3 +154,19 @@ def test_audit_callback_receives_each_call():
 def test_unconfigured_live_client_gives_clear_error():
     with pytest.raises(LLMError, match="not configured"):
         LLMClient(mode="live").complete(MSG)
+
+
+def http_error_body(code, body):
+    return urllib.error.HTTPError("http://x", code, "err", {}, io.BytesIO(body.encode()))
+
+
+def test_quota_exhausted_429_skips_retries_and_uses_the_fallback():
+    c, t = make([http_error_body(429, '{"error":"You exceeded your current quota, please check your plan"}'), ok("backup")])
+    r = c.complete(MSG)
+    assert r.model == "backup" and t.models == ["main", "backup"]  # no pointless retries on the spent model
+
+
+def test_plain_rate_limit_429_is_still_retried():
+    c, t = make([http_error_body(429, '{"error":"slow down"}'), ok("fine")])
+    r = c.complete(MSG)
+    assert r.model == "main" and t.models == ["main", "main"]

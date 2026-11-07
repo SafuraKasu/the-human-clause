@@ -5,7 +5,7 @@
   "statement": "Dubai's 2025 standard gives patients a right to withdraw and opt out of the health information exchange. Abu Dhabi's 2020 exchange policy makes participation mandatory, authorizes sharing where consent is unavailable, and contains no opt-out provision (full-text scan: zero hits). The federal data-protection law's general right to withdraw consent cannot be assumed to fill the gap, because it excludes personal health data that has its own regulating legislation.",
   "relevance": "A patient treated in both emirates, as in our scenario, cannot predict whether an opt-out or withdrawal will be honoured.",
   "recommendation": "Publish a federal or inter-emirate rule on whether and how an opt-out registered in one emirate binds exchanges in another.",
-  "origin": "Hypothesis written before the run; the agent raised a closely related gap at event 2 (cross-emirate consent synchronization). Verified by the team in the source text.",
+  "origin": "Hypothesis written before the run. In the final recorded run the agent independently reported, at event 4, that it found no opt-out provision for Abu Dhabi's exchange equivalent to Dubai's, which matches the team's full-text scan. Verified by the team in the source text.",
   "caveats": "The Abu Dhabi policy is from April 2020 and may have been superseded. English text only.",
   "evidence": [
    {
@@ -98,7 +98,7 @@
   "statement": "No ingested UAE text assigns responsibility for coordinating follow-up on high-severity medication findings that span prescribers in different emirates. Full-text scans find no 'medication reconciliation' or 'responsible for coordinating' anywhere. The nearest provisions concern exchange interoperability and referral data, not who acts on a finding.",
   "relevance": "Our scenario's event 6: three prescribers in two emirates, two high-severity findings, and no stated owner.",
   "recommendation": "Define which institution (for example the most recent prescriber or the patient's primary care provider) owns the response to a cross-institution medication-safety finding.",
-  "origin": "Hypothesis written before the run; confirmed by the agent after eight searches, with the team's full-text scans as an independent check.",
+  "origin": "Hypothesis written before the run; reported by the agent after a multi-query search (the search log is in the run record), with the team's full-text scans as an independent check.",
   "caveats": "Absence in the ingested documents is not proof that no rule exists elsewhere. The EU comparator concerns reporting by digital health authorities, not clinical responsibility.",
   "evidence": [
    {

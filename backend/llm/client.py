@@ -172,8 +172,8 @@ class LLMClient:
                 except urllib.error.HTTPError as e:
                     body = e.read().decode(errors="replace")[:300]
                     last = f"HTTP {e.code} from {model}: {body}"
-                    if e.code == 404:
-                        break  # model unavailable: go straight to the fallback
+                    if e.code == 404 or (e.code == 429 and "quota" in body.lower()):
+                        break  # model gone, or its (daily) quota is spent: retrying is pointless, use the fallback
                     if e.code not in RETRYABLE_HTTP:
                         raise LLMError(last) from e
                 except (urllib.error.URLError, TimeoutError, socket.timeout, ConnectionError) as e:
