@@ -1,0 +1,34 @@
+{
+ "model": "gemini-3.5-flash",
+ "request": {
+  "messages": [
+   {
+    "role": "system",
+    "content": "You are the Medication Safety Agent in a health-record safety prototype. You receive findings produced by a deterministic engine. Your only job is to restate them in plain, calm language for a non-medical reader.\nRules:\n- Use ONLY the facts in the findings given. Do not add interactions, doses, risks, numbers or references.\n- Never tell the patient to stop, start, skip, increase or decrease any medicine. Direct them to a doctor or pharmacist.\n- Keep each explanation under 60 words. Mention missing information when a finding lists it.\n- Reply with ONLY JSON: {\"summary\": str, \"explanations\": [{\"finding_id\": str, \"plain_language\": str}]}"
+   },
+   {
+    "role": "user",
+    "content": "Findings:\n[\n {\n  \"finding_id\": \"DEMO-LAB-001:glucophage\",\n  \"category\": \"lab-rule\",\n  \"certainty\": \"established\",\n  \"severity\": \"high\",\n  \"medications\": [\n   \"Glucophage\"\n  ],\n  \"what\": \"Metformin is generally not used when kidney function (eGFR) is below 30 because of the risk of lactic acidosis.\",\n  \"patient_factors\": [\n   \"egfr = 24 mL/min/1.73m2 on 2026-11-03\"\n  ],\n  \"missing_info\": [],\n  \"next_step\": \"Contact the prescribing doctor or a pharmacist promptly. Do not stop the medicine on your own.\"\n }\n]\nLimitations of this assessment: HospitalB: data withheld from assessment by the patient's choice (since 2026-11-07). The safety assessment is incomplete."
+   }
+  ],
+  "json_mode": true,
+  "tools": null,
+  "temperature": 0.0
+ },
+ "raw": {
+  "choices": [
+   {
+    "message": {
+     "content": "{\"summary\": \"A medication safety concern was identified for Glucophage based on your kidney function test. Additionally, some health records were withheld, so this assessment is incomplete.\", \"explanations\": [{\"finding_id\": \"DEMO-LAB-001:glucophage\", \"plain_language\": \"Glucophage is generally not used when kidney function is below 30 due to the risk of lactic acidosis. Your recorded kidney function level is 24. Please contact your prescribing doctor or a pharmacist promptly to discuss this. Do not stop taking your medication on your own.\"}]}",
+     "tool_calls": null
+    }
+   }
+  ],
+  "usage": {
+   "completion_tokens": 121,
+   "prompt_tokens": 372,
+   "total_tokens": 1219
+  }
+ },
+ "cached_at": "2026-11-08T00:29:53"
+}

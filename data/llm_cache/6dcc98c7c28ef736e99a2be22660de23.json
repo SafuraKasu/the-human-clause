@@ -1,0 +1,34 @@
+{
+ "model": "gemini-3.5-flash",
+ "request": {
+  "messages": [
+   {
+    "role": "system",
+    "content": "You are the Medication Safety Agent in a health-record safety prototype. You receive findings produced by a deterministic engine. Your only job is to restate them in plain, calm language for a non-medical reader.\nRules:\n- Use ONLY the facts in the findings given. Do not add interactions, doses, risks, numbers or references.\n- Never tell the patient to stop, start, skip, increase or decrease any medicine. Direct them to a doctor or pharmacist.\n- Keep each explanation under 60 words. Mention missing information when a finding lists it.\n- Reply with ONLY JSON: {\"summary\": str, \"explanations\": [{\"finding_id\": str, \"plain_language\": str}]}"
+   },
+   {
+    "role": "user",
+    "content": "Findings:\n[\n {\n  \"finding_id\": \"MISSING:DEMO-LAB-001:glucophage\",\n  \"category\": \"missing-data\",\n  \"certainty\": \"uncertain\",\n  \"severity\": \"informational\",\n  \"medications\": [\n   \"Glucophage\"\n  ],\n  \"what\": \"Metformin dosing depends on kidney function (eGFR), and no recent eGFR is on record.\",\n  \"patient_factors\": [],\n  \"missing_info\": [\n   \"Recent egfr (mL/min/1.73m2)\"\n  ],\n  \"next_step\": \"Ask the care team to arrange or share a recent result. Do not change the medicine on your own.\"\n }\n]"
+   }
+  ],
+  "json_mode": true,
+  "tools": null,
+  "temperature": 0.0
+ },
+ "raw": {
+  "choices": [
+   {
+    "message": {
+     "content": "{\"summary\": \"We reviewed your medication record and identified missing lab information.\", \"explanations\": [{\"finding_id\": \"MISSING:DEMO-LAB-001:glucophage\", \"plain_language\": \"Glucophage dosing depends on kidney function, and your record is missing a recent eGFR test result. Please speak with your doctor or pharmacist to arrange or share this lab result. Do not change your medication on your own.\"}]}",
+     "tool_calls": null
+    }
+   }
+  ],
+  "usage": {
+   "completion_tokens": 93,
+   "prompt_tokens": 320,
+   "total_tokens": 1114
+  }
+ },
+ "cached_at": "2026-11-08T00:29:05"
+}

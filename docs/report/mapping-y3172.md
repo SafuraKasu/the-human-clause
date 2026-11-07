@@ -1,0 +1,16 @@
+# ITU-T Y.3172 mapping (full, with evidence)
+
+| Y.3172 component | Role in Y.3172 | Human Clause counterpart | Status | Evidence |
+|---|---|---|---|---|
+| SRC / C (source, collector) | SRC is the source of pipeline input data; C collects from SRC nodes. | Hospital A/B/C record uploads and late lab results (synthetic) are the sources; `ScenarioState` ingests them. | **simulated** | `itu-t-y3172#0029`; `itu-t-y3172#0029` |
+| PP (preprocessor) | Cleans or aggregates data into a form the ML model can consume. | Brand-to-ingredient normalization, status filtering, and consent-based exclusion of withdrawn sources before any assessment. | **implemented** | `itu-t-y3172#0029` |
+| M (model) | The ML model usable in the pipeline. | No trained ML model. A deterministic rule engine (demo KB) makes safety findings; an LLM (Gemini free tier) explains findings and reasons over retrieved policy text. | **partial** | `itu-t-y3172#0029` |
+| P (policy) | Applies policies to the model's output before it is acted on. | Consent module and Policy agent decide what outputs may be used or shown; blocked emergency requests are escalated, not overridden. | **implemented** | `itu-t-y3172#0030` |
+| D / SINK (distributor, sink) | D identifies sinks and distributes the output; SINK takes action on it. | Orchestrator routes results to patient-facing wording, clinician review and human escalation. The sink is a human decision; nothing acts automatically. | **implemented** | `itu-t-y3172#0030`; `itu-t-y3172#0030` |
+| MLFO (orchestrator) | Manages and orchestrates pipeline nodes from ML Intent; selects and reselects the model, e.g. by performance. | Plain-Python Orchestrator sequences nodes and logs handoffs. The LLM client reselects a fallback model on failure; it does not select by measured performance. | **partial** | `itu-t-y3172#0030`; `itu-t-y3172#0030` |
+| ML Intent | Describes the ML application, its data needs, constraints and characteristics; input to the MLFO. | Scenario definition (events, expected outcomes) plus written agent mandates in `docs/agents.md` play this role informally; there is no formal metalanguage. | **partial** | `itu-t-y3172#0037` |
+| ML sandbox subsystem | Lets operators study ML outputs on simulated underlay networks before deploying live. | Scenario replay with synthetic hospitals, mock and live LLM modes, and expected-versus-actual evaluation. Nothing is deployed live. | **implemented** | `itu-t-y3172#0036` |
+| Management subsystem | Extends network management and orchestration to the ML pipeline nodes. | Append-only audit trail and evaluator record what each node did. No resource or lifecycle management. | **partial** | `itu-t-y3172#0034` |
+| Security considerations | Prevent unauthorized access to, and data leaking from, an ML pipeline. | Consent module and audit log; citation guards against invented sources. Not implemented: authentication, encryption, tamper-proof log storage. Synthetic data only. | **partial** | `itu-t-y3172#0038` |
+
+*Y.3172 addresses machine learning in future networks (IMT-2020). We apply its pipeline concepts by analogy to a health-data agent system; the mapping explains how our architecture corresponds to it and does not claim network-level conformance.*

@@ -1,0 +1,161 @@
+[
+ {
+  "id": "G1",
+  "title": "Patients in different emirates get different consent and opt-out rights",
+  "statement": "Dubai's 2025 standard gives patients a right to withdraw and opt out of the health information exchange. Abu Dhabi's 2020 exchange policy makes participation mandatory, authorizes sharing where consent is unavailable, and contains no opt-out provision (full-text scan: zero hits). The federal data-protection law's general right to withdraw consent cannot be assumed to fill the gap, because it excludes personal health data that has its own regulating legislation.",
+  "relevance": "A patient treated in both emirates, as in our scenario, cannot predict whether an opt-out or withdrawal will be honoured.",
+  "recommendation": "Publish a federal or inter-emirate rule on whether and how an opt-out registered in one emirate binds exchanges in another.",
+  "origin": "Hypothesis written before the run; the agent raised a closely related gap at event 2 (cross-emirate consent synchronization). Verified by the team in the source text.",
+  "caveats": "The Abu Dhabi policy is from April 2020 and may have been superseded. English text only.",
+  "evidence": [
+   {
+    "label": "DHA Consent Standard 9.3",
+    "chunk_id": "dha-consent-access-standard-2025#0018",
+    "phrase": "right to withdraw and opt-out"
+   },
+   {
+    "label": "DoH HIE Policy 4.2 (mandatory participation)",
+    "chunk_id": "doh-hie-policy-2020#0021",
+    "phrase": "making universal patient participation in and sharing of data with the ADHIE Platform mandatory"
+   },
+   {
+    "label": "DoH HIE Policy 4.2.1.2 (sharing without consent)",
+    "chunk_id": "doh-hie-policy-2020#0021",
+    "phrase": "notwithstanding the unavailability of patient consent"
+   },
+   {
+    "label": "PDPL Art. 6(2) (general withdrawal right)",
+    "chunk_id": "uae-pdpl-2021#0010",
+    "phrase": "may, at any time, withdraw their consent"
+   },
+   {
+    "label": "PDPL Art. 2(2)(e) (health data exclusion)",
+    "chunk_id": "uae-pdpl-2021#0005",
+    "phrase": "Personal Health Data that has legislation regulating its protection and processing"
+   }
+  ],
+  "international_comparison": [
+   {
+    "label": "EHDS Art. 10(1)",
+    "chunk_id": "eu-ehds-2025-327#0094",
+    "phrase": "exercise of that right is reversible"
+   }
+  ],
+  "scans": [
+   {
+    "description": "occurrences of 'opt-out' in the Abu Dhabi HIE policy",
+    "count": 0
+   }
+  ]
+ },
+ {
+  "id": "G2",
+  "title": "Emergency access to an opted-out patient's records across emirates is unresolved",
+  "statement": "The Dubai standard says an opted-out patient's data should not be retrieved by break-the-glass. The federal Executive Regulation and the ICT Health Law allow access in an emergency or to protect the patient's health and safety, and Abu Dhabi has its own 'break the seal' rule. The Dubai standard's scope is PHI within Dubai. No ingested provision says which rule governs a clinician in one emirate requesting an opted-out patient's data held in another.",
+  "relevance": "Our scenario's event 5: an unconscious, bleeding patient whose opt-out blocks the clinician who needs her full medication list. The system blocked and escalated to a human.",
+  "recommendation": "State, in federal guidance, whether an opt-out can be overridden for vital interests and which emirate's emergency rule applies to cross-emirate requests. The EU resolves the same question explicitly in EHDS Art. 10.",
+  "origin": "Hypothesis written before the run. The agent independently found the conflict and the scope question at event 5 and cited Executive Regulation Art. 6(3) and the Abu Dhabi provision, which we had not scripted. Verified by the team.",
+  "caveats": "Whether the emergency block is the right behavior is a legal question; the consent module's setting is a configuration choice, not a conclusion.",
+  "evidence": [
+   {
+    "label": "DHA Consent Standard 9.7",
+    "chunk_id": "dha-consent-access-standard-2025#0018",
+    "phrase": "should not be retrieved using BTG access"
+   },
+   {
+    "label": "DHA Consent Standard 2.1 (scope)",
+    "chunk_id": "dha-consent-access-standard-2025#0011",
+    "phrase": "All PHI within the Emirate of Dubai"
+   },
+   {
+    "label": "Executive Regulation Art. 6(3)",
+    "chunk_id": "uae-health-ict-exec-reg-2020#0007",
+    "phrase": "In case of an emergency and if the"
+   },
+   {
+    "label": "Federal ICT Health Law Art. 16(3)",
+    "chunk_id": "uae-health-ict-law-2019#0019",
+    "phrase": "health and safety of the patient"
+   },
+   {
+    "label": "DoH HIE Policy 6.1.4",
+    "chunk_id": "doh-hie-policy-2020#0054",
+    "phrase": "break the seal"
+   }
+  ],
+  "international_comparison": [
+   {
+    "label": "EHDS Art. 10(2)",
+    "chunk_id": "eu-ehds-2025-327#0094",
+    "phrase": "even if the patient has exercised the right to opt out in primary use"
+   }
+  ],
+  "scans": []
+ },
+ {
+  "id": "G3",
+  "title": "No ingested provision assigns responsibility for cross-institution follow-up",
+  "statement": "No ingested UAE text assigns responsibility for coordinating follow-up on high-severity medication findings that span prescribers in different emirates. Full-text scans find no 'medication reconciliation' or 'responsible for coordinating' anywhere. The nearest provisions concern exchange interoperability and referral data, not who acts on a finding.",
+  "relevance": "Our scenario's event 6: three prescribers in two emirates, two high-severity findings, and no stated owner.",
+  "recommendation": "Define which institution (for example the most recent prescriber or the patient's primary care provider) owns the response to a cross-institution medication-safety finding.",
+  "origin": "Hypothesis written before the run; confirmed by the agent after eight searches, with the team's full-text scans as an independent check.",
+  "caveats": "Absence in the ingested documents is not proof that no rule exists elsewhere. The EU comparator concerns reporting by digital health authorities, not clinical responsibility.",
+  "evidence": [
+   {
+    "label": "DoH HIE Policy (objective: interoperability for coordination of care)",
+    "chunk_id": "doh-hie-policy-2020#0037",
+    "phrase": "improve the quality and coordination of care"
+   },
+   {
+    "label": "DoH Circular 2026/144 (referral data)",
+    "chunk_id": "doh-circular-2026-144-malaffi-referrals#0001",
+    "phrase": "supporting care coordination, continuity of care, referral tracking"
+   }
+  ],
+  "international_comparison": [
+   {
+    "label": "EHDS Art. 20 (authority-level coordination only)",
+    "chunk_id": "eu-ehds-2025-327#0107",
+    "phrase": "one of them shall be responsible for the drawing up of the report"
+   }
+  ],
+  "scans": [
+   {
+    "description": "occurrences of 'medication reconciliation' across all ingested UAE texts",
+    "count": 0
+   },
+   {
+    "description": "occurrences of 'responsible for coordinating' across all ingested UAE texts",
+    "count": 0
+   }
+  ]
+ },
+ {
+  "id": "G4",
+  "title": "No ingested provision addresses externally hosted AI processing of health data",
+  "statement": "The ICT Health Law restricts storing or processing health data outside the State unless a Health Authority resolution allows it. The Dubai AI policy requires AI solutions to comply with that law but never mentions cloud, location or localization (full-text scan: zero hits), and the instrument that lists exceptions (Ministerial Decision 51 of 2021) is not in our KB. Whether an externally hosted LLM can lawfully process real patient data is therefore not answered by the ingested texts.",
+  "relevance": "This prototype uses a cloud LLM on synthetic data only. A real deployment would need an in-country model or a lawful exception.",
+  "recommendation": "Clarify how Art. 13 applies to AI services hosted abroad, and publish the exceptions in one place alongside the AI policies.",
+  "origin": "Identified in the team's own review, not raised by the agent.",
+  "caveats": "Ministerial Decision 51 of 2021 and the Abu Dhabi AI policy and Responsible AI Standard are not ingested (the Abu Dhabi files could not be downloaded). This gap is limited to the texts we hold.",
+  "evidence": [
+   {
+    "label": "Federal ICT Health Law Art. 13",
+    "chunk_id": "uae-health-ict-law-2019#0016",
+    "phrase": "not permissible to store, process, generate or transform the health data and information outside State"
+   },
+   {
+    "label": "DHA AI Policy 4.6.2",
+    "chunk_id": "dha-ai-policy-2021#0009",
+    "phrase": "Comply with all Articles detailed within"
+   }
+  ],
+  "international_comparison": [],
+  "scans": [
+   {
+    "description": "occurrences of outside/cloud/localization in the Dubai AI policy",
+    "count": 0
+   }
+  ]
+ }
+]

@@ -1,0 +1,61 @@
+{
+  "meta": {
+    "kb_version": "demo-0.1",
+    "label": "DEMONSTRATION KNOWLEDGE BASE. Curated by the team from widely documented drug-safety information for prototype purposes. NOT clinically validated, NOT a substitute for a licensed drug-interaction database. Entries have no external reference identifiers and must be verified by a clinician or pharmacist before any real use.",
+    "source": "Team-curated demonstration data (unverified)",
+    "last_updated": "2026-11-08"
+  },
+  "ingredients": {
+    "warfarin": {"class": "vitamin K antagonist anticoagulant", "brands": ["coumadin", "jantoven"]},
+    "ibuprofen": {"class": "NSAID", "brands": ["brufen", "advil", "motrin", "nurofen"]},
+    "naproxen": {"class": "NSAID", "brands": ["aleve", "naprosyn"]},
+    "diclofenac": {"class": "NSAID", "brands": ["voltaren", "cataflam"]},
+    "ramipril": {"class": "ACE inhibitor", "brands": ["altace", "tritace"]},
+    "lisinopril": {"class": "ACE inhibitor", "brands": ["zestril", "prinivil"]},
+    "spironolactone": {"class": "potassium-sparing diuretic", "brands": ["aldactone"]},
+    "metformin": {"class": "biguanide antidiabetic", "brands": ["glucophage"]},
+    "amiodarone": {"class": "antiarrhythmic", "brands": ["cordarone", "pacerone"]},
+    "simvastatin": {"class": "statin", "brands": ["zocor"]},
+    "clarithromycin": {"class": "macrolide antibiotic", "brands": ["biaxin"]},
+    "amoxicillin": {"class": "penicillin antibiotic", "brands": ["amoxil", "augmentin"]},
+    "aspirin": {"class": "NSAID", "brands": ["ecotrin", "disprin"]}
+  },
+  "class_duplication": ["NSAID", "ACE inhibitor", "statin"],
+  "interactions": [
+    {"id": "DEMO-INT-001", "a": "warfarin", "b": "ibuprofen", "certainty": "established", "severity": "high",
+     "mechanism": "NSAIDs can increase bleeding risk (including gastrointestinal bleeding) in people taking warfarin.",
+     "rationale": "Additive bleeding risk; commonly flagged in drug labeling and interaction references.",
+     "modifiers": []},
+    {"id": "DEMO-INT-002", "a": "ramipril", "b": "spironolactone", "certainty": "established", "severity": "moderate",
+     "mechanism": "Both medicines can raise blood potassium; together the risk of hyperkalemia is higher.",
+     "rationale": "Additive potassium retention; risk is greater when kidney function is reduced.",
+     "modifiers": [{"condition": "chronic kidney disease", "severity": "high",
+                    "why": "Reduced kidney function lowers potassium clearance, increasing hyperkalemia risk."}]},
+    {"id": "DEMO-INT-003", "a": "warfarin", "b": "amiodarone", "certainty": "established", "severity": "high",
+     "mechanism": "Amiodarone can raise the blood-thinning effect of warfarin (higher INR).",
+     "rationale": "Pharmacokinetic interaction that commonly requires INR monitoring.",
+     "modifiers": []},
+    {"id": "DEMO-INT-004", "a": "simvastatin", "b": "clarithromycin", "certainty": "established", "severity": "critical",
+     "mechanism": "Clarithromycin can markedly raise simvastatin levels, increasing the risk of serious muscle injury.",
+     "rationale": "Strong CYP3A4 inhibition; combination is generally avoided.",
+     "modifiers": []}
+  ],
+  "contraindications": [
+    {"id": "DEMO-CON-001", "type": "condition", "ingredient_class": "NSAID", "condition": "chronic kidney disease",
+     "severity": "high", "certainty": "established",
+     "explanation": "NSAIDs can reduce kidney blood flow and worsen kidney function in people who already have kidney disease."},
+    {"id": "DEMO-CON-002", "type": "allergy", "ingredient_class": "penicillin antibiotic", "allergy": "penicillin",
+     "severity": "critical", "certainty": "established",
+     "explanation": "This medicine is in the penicillin family, and a penicillin allergy is recorded for this patient."}
+  ],
+  "lab_rules": [
+    {"id": "DEMO-LAB-001", "ingredient": "metformin", "lab": "egfr", "unit": "mL/min/1.73m2",
+     "operator": "<", "threshold": 30, "severity": "high", "certainty": "established",
+     "explanation": "Metformin is generally not used when kidney function (eGFR) is below 30 because of the risk of lactic acidosis.",
+     "missing_note": "Metformin dosing depends on kidney function (eGFR), and no recent eGFR is on record."},
+    {"id": "DEMO-LAB-002", "ingredient": "spironolactone", "lab": "potassium", "unit": "mmol/L",
+     "operator": ">", "threshold": 5.0, "severity": "high", "certainty": "established",
+     "explanation": "Spironolactone can raise blood potassium, and the recorded potassium is already above the usual upper limit.",
+     "missing_note": "Spironolactone can raise potassium, and no recent potassium result is on record."}
+  ]
+}
