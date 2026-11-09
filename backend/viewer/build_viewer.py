@@ -110,27 +110,42 @@ table{width:100%;border-collapse:collapse;font-size:13.5px}th,td{text-align:left
 details{margin:4px 0}summary{cursor:pointer;color:var(--accent)}blockquote{margin:6px 0 8px;padding:8px 12px;border-left:3px solid var(--line);background:var(--bg);font-size:13px;white-space:pre-wrap}
 .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}.tabs button[aria-selected="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
 ul.tight{margin:4px 0 8px 18px;padding:0}.right{float:right}
+.nav{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin:10px 0 16px}
+.nav a{padding:8px 14px;color:var(--muted);text-decoration:none;border-bottom:2px solid transparent;margin-bottom:-1px;font-weight:600}
+.nav a[aria-current="page"]{color:var(--accent);border-bottom-color:var(--accent)}
+.page{display:none}.page.active{display:block}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="right"><button id="theme" aria-label="Toggle colour theme">Theme</button></div>
   <h1>The Human Clause <span class="muted">· scenario replay</span></h1>
-  <p class="sub">Three cooperating agents keep one patient's medications safe across hospitals in two emirates, and check what UAE rules and the patient's consent allow. Everything here is synthetic.</p>
-  <div id="runbanner"></div>
-  <div class="layout">
-    <aside>
-      <div class="controls">
-        <button class="primary" id="next">Release next event ▶</button>
-        <button id="all">Show all</button><button id="reset">Reset</button>
-      </div>
-      <ol class="tl" id="timeline"></ol>
-      <div class="card small muted" id="legend"></div>
-    </aside>
-    <main id="main"></main>
-  </div>
-  <section id="gaps" class="card" style="margin-top:18px"></section>
-  <p class="small muted">Limits: demonstration medication knowledge base (team-curated, not clinically validated); English-only policy texts; no authentication or encryption; free-tier language model. This page replays a recorded run and calls no model.</p>
+  <nav class="nav" id="nav" aria-label="Pages"></nav>
+
+  <section class="page" id="page-overview">
+    <p class="sub">Three cooperating agents keep one patient's medications safe across hospitals in two emirates, and check what UAE rules and the patient's consent allow. Everything here is synthetic.</p>
+    <div id="runbanner"></div>
+    <div class="card" id="legend"></div>
+    <div class="card" id="eventlist"></div>
+    <p class="small muted">Limits: demonstration medication knowledge base (team-curated, not clinically validated); English-only policy texts; no authentication or encryption; free-tier language model. This page replays a recorded run and calls no model.</p>
+  </section>
+
+  <section class="page" id="page-scenario">
+    <div class="layout">
+      <aside>
+        <div class="controls">
+          <button class="primary" id="next">Release next event ▶</button>
+          <button id="all">Show all</button><button id="reset">Reset</button>
+        </div>
+        <ol class="tl" id="timeline"></ol>
+      </aside>
+      <main id="main"></main>
+    </div>
+  </section>
+
+  <section class="page" id="page-results"><div class="card" id="results"></div></section>
+  <section class="page" id="page-gaps"><div class="card" id="gaps"></div></section>
+  <section class="page" id="page-audit"><div class="card" id="auditpage"></div></section>
 </div>
 <script id="data" type="application/json">__DATA__</script>
 <script>
@@ -244,6 +259,44 @@ function render(){
   document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{tab=b.dataset.tab;render()});
 }
 
+function eventList(){
+  document.getElementById('eventlist').innerHTML = '<h2>The scenario in six events</h2><ol class="tight">' + META.map(m=>
+    `<li><a href="#${m.seq}">${esc(m.title)}</a> <span class="muted small">· ${esc(m.at.replace('T',' '))} · ${esc(m.actor)}</span></li>`).join('') + '</ol>';
+}
+
+function resultsPage(){
+  document.getElementById('results').innerHTML = '<h2>Expected vs actual: summary</h2><p class="small muted">Expectations were written before the run. Open an event to see each check.</p>' +
+   '<table><thead><tr><th>Event</th><th>Pass</th><th>Fail</th><th>Review</th><th>Differs</th><th></th></tr></thead><tbody>' + EV.map(e=>
+    `<tr><td>E${e.seq} · ${esc(META[e.seq-1].title)}</td>${['pass','fail','review','differs'].map(k=>`<td>${e.summary[k]}</td>`).join('')}<td><a href="#${e.seq}/checks">details</a></td></tr>`).join('') +
+   `<tr><td><strong>Total</strong></td>${['pass','fail','review','differs'].map(k=>`<td><strong>${R.totals[k]}</strong></td>`).join('')}<td></td></tr></tbody></table>`;
+}
+
+function auditPage(){
+  const kinds = [...new Set(D.audit.map(a=>a.kind))];
+  document.getElementById('auditpage').innerHTML = `<h2>Audit trail</h2><p class="small muted">${D.audit.length} entries across the run. Decisions, evidence references, rule checks and handoffs. No hidden model reasoning is recorded.</p>
+   <div class="controls"><label class="small">Event <select id="af"><option value="all">All</option>${EV.map(e=>`<option value="${e.seq}">E${e.seq}</option>`).join('')}</select></label>
+   <label class="small">Kind <select id="ak"><option value="all">All</option>${kinds.map(k=>`<option>${esc(k)}</option>`).join('')}</select></label></div><div id="alist"></div>`;
+  const draw = () => {
+    const ev = document.getElementById('af').value, k = document.getElementById('ak').value;
+    const rows = D.audit.filter(a=>(ev==='all'||a.event_seq===+ev)&&(k==='all'||a.kind===k));
+    document.getElementById('alist').innerHTML = rows.map(a=>`<div class="small" style="margin:6px 0"><span class="chip sev-informational">${esc(a.kind)}</span> <span class="muted">E${esc(a.event_seq)}</span> <strong>${esc(a.actor)}</strong> · ${esc(a.summary)}</div>`).join('') || '<p class="muted">No entries.</p>';
+  };
+  document.getElementById('af').onchange = draw; document.getElementById('ak').onchange = draw; draw();
+}
+
+const PAGES = [['overview','Overview'],['scenario','Scenario'],['results','Results'],['gaps','Gaps'],['audit','Audit']];
+function route(){
+  const h = location.hash.replace(/^#/,'');
+  const m = h.match(/^(\d)(?:\/(\w+))?$/);
+  let page = 'overview';
+  if (m && +m[1]>=1 && +m[1]<=EV.length){ released = EV.length; current = +m[1]; if (m[2] && tabs.some(t=>t[0]===m[2])) tab = m[2]; page = 'scenario'; }
+  else if (PAGES.some(p=>p[0]===h)) page = h;
+  document.querySelectorAll('.page').forEach(s=>s.classList.toggle('active', s.id==='page-'+page));
+  document.getElementById('nav').innerHTML = PAGES.map(([k,l])=>`<a href="#${k}" ${k===page?'aria-current="page"':''}>${l}</a>`).join('');
+  if (page==='scenario') render();
+  window.scrollTo(0,0);
+}
+
 function gaps(){
   document.getElementById('gaps').innerHTML = '<h2>Policy and standards gaps found</h2><p class="small muted">Each statement is checked against the ingested text; absence claims come with full-text scans in the report. Absence in our knowledge base is not proof that no rule exists.</p>' + D.gaps.map(g=>`<div style="margin-bottom:14px"><h3 style="text-transform:none;font-size:15px;color:var(--text)">${esc(g.id)} · ${esc(g.title)}</h3>
    <p>${esc(g.statement)}</p><p class="small"><strong>Why it matters here:</strong> ${esc(g.relevance)}<br><strong>Recommendation:</strong> ${esc(g.recommendation)}<br><span class="muted">Origin: ${esc(g.origin)} Caveats: ${esc(g.caveats)}</span></p>
@@ -254,9 +307,8 @@ document.getElementById('next').onclick=()=>{if(released<EV.length){released++;c
 document.getElementById('all').onclick=()=>{released=EV.length;render()};
 document.getElementById('reset').onclick=()=>{released=1;current=1;tab='safety';render()};
 document.getElementById('theme').onclick=()=>{const r=document.documentElement,dark=getComputedStyle(r).getPropertyValue('--bg').trim()==='#10141b';r.dataset.theme=dark?'light':'dark'};
-(function(){const m=location.hash.match(/^#(\d)(?:\/(\w+))?$/);
-  if(m&&+m[1]>=1&&+m[1]<=EV.length){released=EV.length;current=+m[1];if(m[2]&&tabs.some(t=>t[0]===m[2]))tab=m[2];}})();
-runBanner(); gaps(); render();
+window.addEventListener('hashchange', route);
+runBanner(); eventList(); resultsPage(); auditPage(); gaps(); route();
 </script>
 </body>
 </html>
