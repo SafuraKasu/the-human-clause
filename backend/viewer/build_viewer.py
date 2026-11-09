@@ -11,6 +11,7 @@ import json
 from pathlib import Path
 
 from backend import config
+from backend.agents.audit import verify as verify_audit
 from backend.kb.retrieve import KnowledgeBase
 from backend.report import content as C
 from backend.report.build import adjudicate
@@ -50,7 +51,8 @@ def build(run_dir: Path, out: Path) -> Path:
              "recommendation": g["recommendation"], "origin": g["origin"], "caveats": g["caveats"],
              "evidence": [{"label": l, "chunk_id": c} for l, c, _ in g["evidence"]],
              "comparison": [{"label": l, "chunk_id": c} for l, c, _ in g["comparison"]]} for g in C.GAPS]
-    data = {"run_id": run_dir.name, "run": run, "audit": audit, "chunks": chunks, "gaps": gaps,
+    data = {"run_id": run_dir.name, "run": run, "audit": audit, "audit_integrity": verify_audit(audit),
+            "chunks": chunks, "gaps": gaps,
             "events_meta": [{"seq": e.seq, "title": e.title, "at": e.at, "narrative": e.narrative, "actor": e.actor}
                             for e in fatima.EVENTS]}
     blob = json.dumps(data, ensure_ascii=False, default=str).replace("</", "<\\/")
@@ -338,13 +340,21 @@ function resultsPage(){
 
 function auditPage(){
   const kinds = [...new Set(D.audit.map(a=>a.kind))];
-  document.getElementById('auditpage').innerHTML = `<h2>Audit trail</h2><p class="small muted">${D.audit.length} entries across the run. Decisions, evidence references, rule checks and handoffs. No hidden model reasoning is recorded.</p>
+  const I = D.audit_integrity;
+  const ib = I.status==='ok' ? `<div class="banner live"><strong>Integrity: chain intact.</strong> ${esc(I.message)}. Each entry's SHA-256 hash covers its content and the previous hash, so editing, deleting, inserting or reordering an entry is detectable. Truncating the end of the log is not detectable without the head hash, and someone who rewrites the whole chain can reseal it. Re-check with <code>python -m backend.agents.audit verify data/runs/${esc(D.run_id)}/audit.jsonl</code>.</div>`
+    : I.status==='broken' ? `<div class="banner esc"><strong>Integrity: BROKEN.</strong> ${esc(I.message)}</div>`
+    : `<div class="banner warn"><strong>Integrity: not sealed.</strong> ${esc(I.message)}</div>`;
+  document.getElementById('auditpage').innerHTML = `<h2>Audit trail</h2>${ib}<p class="small muted">${D.audit.length} entries across the run. Decisions, evidence references, rule checks and handoffs. No hidden model reasoning is recorded. <button id="aexp">Export JSONL</button></p>
    <div class="controls"><label class="small">Event <select id="af"><option value="all">All</option>${EV.map(e=>`<option value="${e.seq}">E${e.seq}</option>`).join('')}</select></label>
    <label class="small">Kind <select id="ak"><option value="all">All</option>${kinds.map(k=>`<option>${esc(k)}</option>`).join('')}</select></label></div><div id="alist"></div>`;
   const draw = () => {
     const ev = document.getElementById('af').value, k = document.getElementById('ak').value;
     const rows = D.audit.filter(a=>(ev==='all'||a.event_seq===+ev)&&(k==='all'||a.kind===k));
     document.getElementById('alist').innerHTML = rows.map(a=>`<div class="small" style="margin:6px 0"><span class="chip sev-informational">${esc(a.kind)}</span> <span class="muted">E${esc(a.event_seq)}</span> <strong>${esc(a.actor)}</strong> · ${esc(a.summary)}</div>`).join('') || '<p class="muted">No entries.</p>';
+  };
+  document.getElementById('aexp').onclick = () => {
+    const blob = new Blob([D.audit.map(a=>JSON.stringify(a)).join('\n')+'\n'], {type:'application/x-ndjson'});
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `audit-${D.run_id}.jsonl`; a.click(); URL.revokeObjectURL(a.href);
   };
   document.getElementById('af').onchange = draw; document.getElementById('ak').onchange = draw; draw();
 }

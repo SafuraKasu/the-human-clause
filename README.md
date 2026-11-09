@@ -30,14 +30,14 @@ Each step has an expected outcome written beforehand and an actual outcome captu
 | Consent module | `backend/consent/` | Grants with scope and expiry, revocation, opt-out, break-the-glass. Called as a tool, not an agent. |
 | Policy KB + retrieval | `kb/`, `backend/kb/` | Chunked UAE, EU and ITU documents with BM25 retrieval. See [kb/MANIFEST.md](kb/MANIFEST.md). |
 | LLM layer | `backend/llm/` | Provider-agnostic, with mock and live modes and an on-disk response cache. |
-| Audit trail | `backend/agents/audit.py` | Append-only log of events, inputs, citations, rule checks and decision summaries. It records no hidden chain-of-thought. |
+| Audit trail | `backend/agents/audit.py` | Append-only log of events, inputs, citations, rule checks and decision summaries, sealed as a SHA-256 hash chain so edits are detectable. It records no hidden chain-of-thought. |
 | Report generator | `backend/report/` | Builds the gap report and the ITU-T Y.3172 and AI Readiness mappings from the recorded run. |
 
 Agent authority and information boundaries are in [docs/agents.md](docs/agents.md).
 
 ## Quick start
 
-Requires Python 3.13.
+Requires Python 3.13. The tests also need `pytest` (`pip install pytest`).
 
 ```powershell
 pip install -r backend/requirements.txt
@@ -52,9 +52,29 @@ python -m backend.run_scenario --mode mock
 
 Runs are written to `data/runs/<timestamp>-<mode>/` as `audit.jsonl`, `run.json` and `report.md`.
 
+On Windows, if `python` opens the Microsoft Store, use `py -3` instead.
+
+### Audit integrity
+
+Every `audit.jsonl` is written as a hash chain: each entry's hash covers its content and the previous hash. Check a run with:
+
+```powershell
+python -m backend.agents.audit verify data/runs/20261108-005651-live/audit.jsonl
+```
+
+This detects edited, deleted, inserted or reordered entries. It does not detect entries cut off the end of the log, and someone who rewrites the whole chain can reseal it, so it is tamper-evident, not tamper-proof. `seal` adds hashes to an older unsealed file.
+
 ### Offline demo viewer
 
-Open [docs/demo/index.html](docs/demo/index.html) in a browser. It steps through the recorded live run event by event, showing findings, consent state, policy citations, expected vs actual outcomes, the audit trail and the gaps. It replays a recording and calls no model. Rebuild it with `python -m backend.viewer.build_viewer`.
+Open [docs/demo/index.html](docs/demo/index.html) in a browser. It replays the recorded live run and calls no model. It has five pages:
+
+- **Overview:** headline results, who does what, and the six events.
+- **Scenario:** step through the events and open each event's findings, consent decisions, policy citations, expected vs actual checks and audit entries.
+- **Results:** pass, fail, review and differs counts per event.
+- **Gaps:** the policy and standards gap report with evidence.
+- **Audit:** the full audit trail with filters, the chain integrity result, and a JSONL export.
+
+Rebuild it with `python -m backend.viewer.build_viewer`.
 
 ### Live mode
 
@@ -80,7 +100,7 @@ The report build fails if any citation phrase is missing from the ingested KB.
 
 ## Recorded results
 
-The final recorded live run is `data/runs/20261108-005651-live`: 42 pass, 5 fail, 12 review, 1 differs. It was served entirely by the fallback model `gemini-3.1-flash-lite`, because the primary model's free-tier quota was exhausted. Every non-pass result is adjudicated in `backend/report/content.py`. Mock-mode results are labelled as mock and are not used as evidence.
+The final recorded live run is `data/runs/20261108-005651-live`: 42 pass, 5 fail, 12 review, 1 differs. It was served entirely by the fallback model `gemini-3.1-flash-lite`, because the primary model's free-tier quota was exhausted. Every non-pass result is adjudicated in `backend/report/content.py`. Its audit log was sealed with hashes after the run; the entries themselves are unchanged. Mock-mode results are labelled as mock and are not used as evidence.
 
 ## Documentation
 
@@ -94,5 +114,6 @@ The final recorded live run is `data/runs/20261108-005651-live`: 42 pass, 5 fail
 - No FastAPI service or React UI. The demo is a command-line runner plus a static HTML viewer of a recorded run.
 - No federated learning, adherence reminders or real hospital integrations.
 - The KB uses English text only, and Arabic prevails legally. Some sources may be superseded (for example the 2020 Abu Dhabi HIE policy). Abu Dhabi's AI policy could not be downloaded and is not ingested.
+- The audit log is tamper-evident, not tamper-proof: there is no protected storage, authentication or encryption.
 - The medication-safety demo KB is unverified by a clinician or pharmacist.
 - Independent validation, appeals and an accountability agreement (DHA AI policy 4.2-4.4) are not met.
