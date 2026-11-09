@@ -42,3 +42,5 @@ Grants per (grantee, source, category, purpose) with expiry; revocation effectiv
 
 ## Human oversight
 No component takes a clinical action. Outputs are advisory; blocked emergency requests and every safety finding go to a human. The prototype has no authentication, encryption or clinical validation and uses synthetic data only.
+
+**Human review records (`backend/review/`).** A person can record `uphold`, `override` (also how an appeal is recorded) or `defer` for any escalation or high/critical finding, with their name, stated role and a reason of at least 15 characters. Records go to `reviews.jsonl` beside the run, as a hash chain that starts from the head hash of that run's audit trail, so a review is bound to the audit it was made against. Later decisions supersede earlier ones; history is kept. Limits: record-only (it does not change consent state or any finding, and nothing is released or acted on); the role is as stated, not verified, because who may decide a cross-emirate conflict is itself an open gap (G2, G3); there is no authentication. The recorded run `20261108-005651-live` has **no** human reviews: all items are pending.

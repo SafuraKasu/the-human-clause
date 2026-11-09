@@ -45,11 +45,12 @@ def _digest(entry: dict, prev_hash: str) -> str:
     return hashlib.sha256((prev_hash + canon).encode("utf-8")).hexdigest()
 
 
-def seal(entries: list[dict]) -> list[dict]:
+def seal(entries: list[dict], genesis: str = GENESIS) -> list[dict]:
     """Add `prev_hash` and `hash` to every entry. Each hash covers the entry and the previous hash, so
     editing, deleting, reordering or inserting any entry breaks every hash after it. This makes tampering
-    DETECTABLE; it does not prevent it (someone who rewrites the whole chain can reseal it)."""
-    out, prev = [], GENESIS
+    DETECTABLE; it does not prevent it (someone who rewrites the whole chain can reseal it).
+    `genesis` lets a second chain (e.g. human reviews) start from another chain's head hash."""
+    out, prev = [], genesis
     for e in entries:
         body = {k: v for k, v in e.items() if k not in ("hash", "prev_hash")}
         h = _digest(body, prev)
@@ -58,18 +59,23 @@ def seal(entries: list[dict]) -> list[dict]:
     return out
 
 
-def write_sealed(entries: list[dict], path: Path) -> None:
-    Path(path).write_text("\n".join(json.dumps(e, ensure_ascii=False) for e in seal(entries)) + "\n", encoding="utf-8")
+def write_sealed(entries: list[dict], path: Path, genesis: str = GENESIS) -> None:
+    Path(path).write_text("\n".join(json.dumps(e, ensure_ascii=False) for e in seal(entries, genesis)) + "\n",
+                          encoding="utf-8")
 
 
-def verify(entries: list[dict]) -> dict:
+def head_hash(entries: list[dict]) -> str:
+    return entries[-1]["hash"] if entries and "hash" in entries[-1] else ""
+
+
+def verify(entries: list[dict], genesis: str = GENESIS) -> dict:
     """Check a trail. Returns {status: ok|broken|unsealed, entries, first_bad_seq, message}."""
     if not entries:
         return {"status": "unsealed", "entries": 0, "first_bad_seq": None, "message": "empty trail"}
     if not any("hash" in e for e in entries):
         return {"status": "unsealed", "entries": len(entries), "first_bad_seq": None,
                 "message": "no hashes present: integrity cannot be checked"}
-    prev = GENESIS
+    prev = genesis
     for i, e in enumerate(entries):
         if e.get("prev_hash") != prev or e.get("hash") != _digest(e, prev):
             return {"status": "broken", "entries": len(entries), "first_bad_seq": e.get("seq", i + 1),

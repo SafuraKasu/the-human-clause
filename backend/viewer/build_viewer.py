@@ -15,6 +15,7 @@ from backend.agents.audit import verify as verify_audit
 from backend.kb.retrieve import KnowledgeBase
 from backend.report import content as C
 from backend.report.build import adjudicate
+from backend.review import records as review
 from backend.scenario import fatima
 
 
@@ -51,7 +52,10 @@ def build(run_dir: Path, out: Path) -> Path:
              "recommendation": g["recommendation"], "origin": g["origin"], "caveats": g["caveats"],
              "evidence": [{"label": l, "chunk_id": c} for l, c, _ in g["evidence"]],
              "comparison": [{"label": l, "chunk_id": c} for l, c, _ in g["comparison"]]} for g in C.GAPS]
+    reviews = review.read_reviews(run_dir)
     data = {"run_id": run_dir.name, "run": run, "audit": audit, "audit_integrity": verify_audit(audit),
+            "reviews": reviews, "review_integrity": review.check(run_dir),
+            "review_status": review.status_by_item(run, reviews),
             "chunks": chunks, "gaps": gaps,
             "events_meta": [{"seq": e.seq, "title": e.title, "at": e.at, "narrative": e.narrative, "actor": e.actor}
                             for e in fatima.EVENTS]}
@@ -241,6 +245,17 @@ function citation(cid){
   return `<details><summary><code>${esc(cid)}</code> ${esc(c.document)} · ${esc(where)}</summary><blockquote>${esc(c.text)}</blockquote><div class="small muted">${esc(c.scope)} · <a href="${esc(c.url)}" target="_blank" rel="noopener">source</a></div></details>`;
 }
 
+function reviewChip(itemId){
+  const r = D.review_status[itemId];
+  return r ? `<span class="chip ${r.decision==='override'?'st-differs':r.decision==='uphold'?'ok':'st-review'}">human: ${esc(r.decision)}</span>`
+           : `<span class="chip st-review">awaiting human decision</span>`;
+}
+function reviewLine(itemId){
+  const r = D.review_status[itemId];
+  return r ? `<div class="small" style="margin-top:6px"><strong>Human review #${r.seq}:</strong> ${esc(r.decision)} by ${esc(r.reviewer)} (${esc(r.role_as_stated)}, role as stated, not verified). ${esc(r.reason)}<br><span class="muted">Record only: it does not change consent state or any finding.</span></div>`
+           : `<div class="small muted" style="margin-top:6px">No human has recorded a decision. Record one with <code>python -m backend.review record --run data/runs/${esc(D.run_id)} --item ${esc(itemId)} ...</code></div>`;
+}
+
 function paneSafety(e, m){
   const s = e.safety, d = findingsDiff(m.seq);
   let h = '';
@@ -252,6 +267,7 @@ function paneSafety(e, m){
     const src = s.explanation_source[f.finding_id];
     return `<div class="fcard s-${esc(f.severity)}"><div class="top">${sevChip(f.severity)}<span class="chip sev-informational">${esc(f.certainty)}</span><span class="ttl">${esc(f.title)}</span></div>
       <div>${esc(s.explanations[f.finding_id])}</div>
+      ${(f.severity==='high'||f.severity==='critical')?`<div style="margin-top:6px">${reviewChip('E'+m.seq+':finding:'+f.finding_id)}</div>`:''}
       <div class="small muted" style="margin-top:6px"><code>${esc(f.finding_id)}</code> · evidence: ${esc(f.evidence.reference_id||'n/a')} · KB ${esc(f.evidence.kb_version)} · demonstration data · <span class="chip ${src==='llm'?'new':'sev-informational'}">${src==='llm'?'worded by the LLM':'engine text'}</span></div></div>`;}).join('') + '</div>';
   if (s.issues.length) h += `<p class="small muted">Validation notes: ${s.issues.map(esc).join('; ')}</p>`;
   return h;
@@ -260,7 +276,8 @@ function paneSafety(e, m){
 function paneConsent(e){
   const keys = Object.keys(e.consent);
   let h = '';
-  if (e.escalations.length) h += `<div class="banner esc"><strong>Escalated to a human.</strong> ${e.escalations.map(x=>esc(x.reason)+(x.basis?'<br><span class="small">Rule: '+esc(x.basis)+'</span>':'')).join('<br>')}<br><span class="small">The system does not override either rule on its own.</span></div>`;
+  if (e.escalations.length) h += `<div class="banner esc"><strong>Escalated to a human.</strong> ${e.escalations.map(x=>{const id='E'+e.seq+':escalation:'+x.label;
+    return esc(x.reason)+(x.basis?'<br><span class="small">Rule: '+esc(x.basis)+'</span>':'')+'<div style="margin-top:6px">'+reviewChip(id)+'</div>'+reviewLine(id);}).join('<hr>')}<br><span class="small">The system does not override either rule on its own.</span></div>`;
   if (!keys.length) return h + '<p class="muted">No access requests at this event.</p>';
   return h + '<div class="cardgrid">' + keys.map(k=>{const d=e.consent[k];
     return `<div class="fcard ${d.allowed?'allow':'deny'}"><div class="top"><span class="chip ${d.allowed?'ok':'no'}">${d.allowed?'ALLOWED':'DENIED'}</span><code>${esc(k)}</code>${d.flagged_for_review?' <span class="chip st-review">flagged for review</span>':''}</div>
@@ -344,7 +361,11 @@ function auditPage(){
   const ib = I.status==='ok' ? `<div class="banner live"><strong>Integrity: chain intact.</strong> ${esc(I.message)}. Each entry's SHA-256 hash covers its content and the previous hash, so editing, deleting, inserting or reordering an entry is detectable. Truncating the end of the log is not detectable without the head hash, and someone who rewrites the whole chain can reseal it. Re-check with <code>python -m backend.agents.audit verify data/runs/${esc(D.run_id)}/audit.jsonl</code>.</div>`
     : I.status==='broken' ? `<div class="banner esc"><strong>Integrity: BROKEN.</strong> ${esc(I.message)}</div>`
     : `<div class="banner warn"><strong>Integrity: not sealed.</strong> ${esc(I.message)}</div>`;
-  document.getElementById('auditpage').innerHTML = `<h2>Audit trail</h2>${ib}<p class="small muted">${D.audit.length} entries across the run. Decisions, evidence references, rule checks and handoffs. No hidden model reasoning is recorded. <button id="aexp">Export JSONL</button></p>
+  const RS = Object.entries(D.review_status), pending = RS.filter(([k,v])=>!v).length, RI = D.review_integrity;
+  const rv = `<h3>Human review</h3><p class="small">${RS.length} items need or allow a human decision (escalations and high-severity findings): <strong>${RS.length-pending} decided</strong>, <strong>${pending} awaiting a human</strong>. Decisions are record-only and each is bound to this audit trail by its hash chain. ${RI.status==='ok'?'Review chain intact.':RI.status==='none'?'':'<strong>Review chain: '+esc(RI.status)+' ('+esc(RI.message)+')</strong>'}</p>` +
+    (D.reviews.length ? `<div class="cardgrid">${D.reviews.map(r=>`<div class="fcard"><div class="top"><span class="chip ${r.decision==='override'?'st-differs':r.decision==='uphold'?'ok':'st-review'}">${esc(r.decision)}</span><code>${esc(r.item_id)}</code><span class="small muted">#${r.seq} · ${esc(r.recorded_at)}</span></div>
+      <div class="small">${esc(r.item_summary)}</div><div>${esc(r.reason)}</div><div class="small muted">${esc(r.reviewer)} (${esc(r.role_as_stated)}, role as stated, not verified)${r.supersedes?' · supersedes #'+r.supersedes:''}</div></div>`).join('')}</div>` : '<p class="small muted">No human review has been recorded for this run.</p>');
+  document.getElementById('auditpage').innerHTML = `<h2>Audit trail</h2>${ib}${rv}<h3 style="margin-top:16px">Agent and system entries</h3><p class="small muted">${D.audit.length} entries across the run. Decisions, evidence references, rule checks and handoffs. No hidden model reasoning is recorded. <button id="aexp">Export JSONL</button></p>
    <div class="controls"><label class="small">Event <select id="af"><option value="all">All</option>${EV.map(e=>`<option value="${e.seq}">E${e.seq}</option>`).join('')}</select></label>
    <label class="small">Kind <select id="ak"><option value="all">All</option>${kinds.map(k=>`<option>${esc(k)}</option>`).join('')}</select></label></div><div id="alist"></div>`;
   const draw = () => {

@@ -64,6 +64,19 @@ python -m backend.agents.audit verify data/runs/20261108-005651-live/audit.jsonl
 
 This detects edited, deleted, inserted or reordered entries. It does not detect entries cut off the end of the log, and someone who rewrites the whole chain can reseal it, so it is tamper-evident, not tamper-proof. `seal` adds hashes to an older unsealed file.
 
+### Human review
+
+Escalations and high-severity findings stop at "a human must decide". A person can record that decision, with their name, stated role and a reason:
+
+```powershell
+python -m backend.review list   --run data/runs/20261108-005651-live
+python -m backend.review record --run data/runs/20261108-005651-live --item E5:escalation:ED_btg_B_meds `
+    --decision override --reviewer "Name" --role clinician --reason "At least 15 characters of reasoning"
+python -m backend.review show   --run data/runs/20261108-005651-live
+```
+
+Decisions are `uphold`, `override` (also how an appeal is recorded) or `defer`. They are saved to `reviews.jsonl` as a hash chain tied to the run's audit trail. This is record-only: it changes no consent state or finding, the role is not verified, and there is no authentication. The committed run has no reviews recorded, so every item shows as awaiting a human. Rebuild the viewer afterwards to see them.
+
 ### Offline demo viewer
 
 Open [docs/demo/index.html](docs/demo/index.html) in a browser. It replays the recorded live run and calls no model. It has five pages:
