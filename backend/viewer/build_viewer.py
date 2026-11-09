@@ -114,17 +114,66 @@ ul.tight{margin:4px 0 8px 18px;padding:0}.right{float:right}
 .nav a{padding:8px 14px;color:var(--muted);text-decoration:none;border-bottom:2px solid transparent;margin-bottom:-1px;font-weight:600}
 .nav a[aria-current="page"]{color:var(--accent);border-bottom-color:var(--accent)}
 .page{display:none}.page.active{display:block}
+/* --- polish layer --- */
+body{font-family:Inter,"Segoe UI",system-ui,-apple-system,Roboto,sans-serif;background:var(--bg)}
+.wrap{max-width:1100px}
+.hero{display:flex;align-items:center;gap:14px;padding:18px 20px;border-radius:16px;margin-bottom:14px;color:#fff;
+ background:linear-gradient(135deg,#17386b 0%,#1f5fbf 55%,#2a8f8a 100%);box-shadow:0 6px 20px rgba(31,95,191,.25)}
+.hero .mark{width:44px;height:44px;border-radius:12px;background:rgba(255,255,255,.18);display:grid;place-items:center;font-size:24px;flex:none}
+.hero h1{color:#fff;font-size:24px;margin:0;letter-spacing:-.01em}.hero .tag{opacity:.85;font-size:13.5px}
+.hero .grow{flex:1;min-width:0}.hero button{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.35);color:#fff}
+.hero .badge{font-size:12px;font-weight:600;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);padding:3px 10px;border-radius:999px;margin-right:8px;white-space:nowrap}
+.card{border-radius:14px;box-shadow:0 1px 2px rgba(16,24,40,.05),0 4px 14px rgba(16,24,40,.04);padding:18px 20px}
+h2{font-size:18px;letter-spacing:-.01em}
+.nav{border:0;background:var(--surface);border-radius:12px;padding:4px;box-shadow:0 1px 2px rgba(16,24,40,.06);display:inline-flex}
+.nav a{border:0;margin:0;border-radius:9px;padding:7px 16px}.nav a[aria-current="page"]{background:var(--accent-soft);color:var(--accent)}
+.nav a:hover{color:var(--text)}
+.pagehead{margin:14px 0 14px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:14px 0}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;border-top:4px solid var(--line);box-shadow:0 1px 2px rgba(16,24,40,.05)}
+.tile .num{font-size:34px;font-weight:700;line-height:1.1;letter-spacing:-.02em}.tile .lab{font-size:13px;color:var(--muted)}
+.tile.t-pass{border-top-color:var(--ok)}.tile.t-pass .num{color:var(--ok)}.tile.t-fail{border-top-color:var(--bad)}.tile.t-fail .num{color:var(--bad)}
+.tile.t-review{border-top-color:var(--rev)}.tile.t-review .num{color:var(--rev)}.tile.t-differs{border-top-color:var(--dif)}.tile.t-differs .num{color:var(--dif)}
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:10px}
+.node{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--bg);position:relative}
+.node .ic{font-size:20px}.node b{display:block;margin:2px 0}.node .small{color:var(--muted)}
+.node.core{background:var(--accent-soft);border-color:var(--accent)}
+.controls{align-items:center}
+button{border-radius:10px;transition:background .15s,border-color .15s}button:hover:not(:disabled){border-color:var(--accent)}
+.layout{display:block}
+.tl{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 8px}
+.tl li{flex:1 0 150px;position:relative;padding:10px 12px 10px 48px;margin:0;transition:box-shadow .15s}
+.tl li:hover:not(.locked){box-shadow:0 3px 10px rgba(16,24,40,.1)}
+.tl .dot{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;background:var(--info-bg);color:var(--muted)}
+.tl li[aria-current="true"] .dot{background:var(--accent);color:#fff}.tl li.done .dot{background:var(--ok-bg);color:var(--ok)}
+.tl .n{font-size:13.5px;line-height:1.3}
+.cardgrid{display:grid;gap:10px}
+.fcard{border:1px solid var(--line);border-left:5px solid var(--info);border-radius:12px;padding:12px 14px;background:var(--surface)}
+.fcard.s-critical{border-left-color:var(--crit)}.fcard.s-high{border-left-color:var(--high)}.fcard.s-moderate{border-left-color:var(--mod)}.fcard.s-low{border-left-color:var(--low)}
+.fcard .top{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:4px}.fcard .ttl{font-weight:650}
+.fcard.allow{border-left-color:var(--ok)}.fcard.deny{border-left-color:var(--bad)}
+.bar{display:flex;height:12px;border-radius:999px;overflow:hidden;background:var(--info-bg);min-width:140px}
+.bar i{display:block}.bar .b-pass{background:var(--ok)}.bar .b-fail{background:var(--bad)}.bar .b-review{background:#d4a017}.bar .b-differs{background:var(--dif)}
+tbody tr:hover{background:var(--bg)}
+.gcard{border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:12px;background:var(--surface)}
+.gcard .gid{display:inline-block;font-weight:700;color:var(--accent);background:var(--accent-soft);border-radius:8px;padding:1px 9px;margin-right:6px}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="right"><button id="theme" aria-label="Toggle colour theme">Theme</button></div>
-  <h1>The Human Clause <span class="muted">· scenario replay</span></h1>
+  <header class="hero">
+    <div class="mark" aria-hidden="true">⚕</div>
+    <div class="grow"><h1>The Human Clause</h1><div class="tag">Policy-grounded medication-safety agents · UAE · scenario replay</div></div>
+    <span class="badge" id="herobadge"></span>
+    <button id="theme" aria-label="Toggle colour theme">Theme</button>
+  </header>
   <nav class="nav" id="nav" aria-label="Pages"></nav>
 
   <section class="page" id="page-overview">
-    <p class="sub">Three cooperating agents keep one patient's medications safe across hospitals in two emirates, and check what UAE rules and the patient's consent allow. Everything here is synthetic.</p>
-    <div id="runbanner"></div>
+    <p class="sub pagehead">Three cooperating agents keep one patient's medications safe across hospitals in two emirates, and check what UAE rules and the patient's consent allow. Everything here is synthetic.</p>
+    <div class="tiles" id="tiles"></div>
+    <div class="card" id="agents"></div>
+    <div id="runbanner" style="margin-top:14px"></div>
     <div class="card" id="legend"></div>
     <div class="card" id="eventlist"></div>
     <p class="small muted">Limits: demonstration medication knowledge base (team-curated, not clinically validated); English-only policy texts; no authentication or encryption; free-tier language model. This page replays a recorded run and calls no model.</p>
@@ -172,7 +221,7 @@ function timeline(){
   document.getElementById('timeline').innerHTML = EV.map((e,i)=>{
     const n=e.seq, locked = n>released, cur = n===current && !locked;
     return `<li class="${locked?'locked':''}" ${cur?'aria-current="true"':''} data-n="${n}" tabindex="${locked?-1:0}" role="button" aria-disabled="${locked}">
-      <div class="t">${esc(e.at.replace('T',' '))}</div><div class="n">${locked?'Event '+n+' (not yet released)':'E'+n+' · '+esc(e.title)}</div></li>`;}).join('');
+      <span class="dot">${n<current&&!locked?'✓':n}</span><div class="t">${esc(e.at.replace('T',' '))}</div><div class="n">${locked?'Not yet released':esc(e.title)}</div></li>`;}).join('');
   document.querySelectorAll('#timeline li:not(.locked)').forEach(li=>{
     const go=()=>{current=+li.dataset.n;render()}; li.onclick=go; li.onkeydown=ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();go()}};});
   document.getElementById('next').disabled = released>=EV.length;
@@ -197,11 +246,11 @@ function paneSafety(e, m){
   h += `<p>${esc(s.summary)}</p>`;
   if (d.added.length||d.removed.length) h += `<p class="small">Since the previous event: ${d.added.map(x=>`<span class="chip new">new</span> <code>${esc(x)}</code>`).join(' ')} ${d.removed.map(x=>`<span class="chip gone">${esc(x)}</span> resolved or withheld`).join(' ')}</p>`;
   if (!s.findings.length) return h + '<p class="muted">No findings.</p>';
-  h += '<table><thead><tr><th>Severity</th><th>Finding</th><th>Plain-language explanation</th></tr></thead><tbody>' + s.findings.map(f=>{
+  h += '<div class="cardgrid">' + s.findings.map(f=>{
     const src = s.explanation_source[f.finding_id];
-    return `<tr><td>${sevChip(f.severity)}<br><span class="small muted">${esc(f.certainty)}</span></td>
-      <td><strong>${esc(f.title)}</strong><br><code>${esc(f.finding_id)}</code><br><span class="small muted">evidence: ${esc(f.evidence.reference_id||'n/a')} · KB ${esc(f.evidence.kb_version)} · demonstration data</span></td>
-      <td>${esc(s.explanations[f.finding_id])}<br><span class="chip ${src==='llm'?'new':'sev-informational'}">${src==='llm'?'worded by the LLM':'engine text'}</span></td></tr>`;}).join('') + '</tbody></table>';
+    return `<div class="fcard s-${esc(f.severity)}"><div class="top">${sevChip(f.severity)}<span class="chip sev-informational">${esc(f.certainty)}</span><span class="ttl">${esc(f.title)}</span></div>
+      <div>${esc(s.explanations[f.finding_id])}</div>
+      <div class="small muted" style="margin-top:6px"><code>${esc(f.finding_id)}</code> · evidence: ${esc(f.evidence.reference_id||'n/a')} · KB ${esc(f.evidence.kb_version)} · demonstration data · <span class="chip ${src==='llm'?'new':'sev-informational'}">${src==='llm'?'worded by the LLM':'engine text'}</span></div></div>`;}).join('') + '</div>';
   if (s.issues.length) h += `<p class="small muted">Validation notes: ${s.issues.map(esc).join('; ')}</p>`;
   return h;
 }
@@ -211,8 +260,9 @@ function paneConsent(e){
   let h = '';
   if (e.escalations.length) h += `<div class="banner esc"><strong>Escalated to a human.</strong> ${e.escalations.map(x=>esc(x.reason)+(x.basis?'<br><span class="small">Rule: '+esc(x.basis)+'</span>':'')).join('<br>')}<br><span class="small">The system does not override either rule on its own.</span></div>`;
   if (!keys.length) return h + '<p class="muted">No access requests at this event.</p>';
-  return h + '<table><thead><tr><th>Request</th><th>Decision</th><th>Why</th></tr></thead><tbody>' + keys.map(k=>{const d=e.consent[k];
-    return `<tr><td><code>${esc(k)}</code></td><td><span class="chip ${d.allowed?'ok':'no'}">${d.allowed?'ALLOWED':'DENIED'}</span> <code>${esc(d.reason_code)}</code>${d.flagged_for_review?' <span class="chip st-review">flagged for review</span>':''}</td><td>${esc(d.reason)}${d.rule_basis?'<br><span class="small muted">'+esc(d.rule_basis)+'</span>':''}</td></tr>`;}).join('') + '</tbody></table>';
+  return h + '<div class="cardgrid">' + keys.map(k=>{const d=e.consent[k];
+    return `<div class="fcard ${d.allowed?'allow':'deny'}"><div class="top"><span class="chip ${d.allowed?'ok':'no'}">${d.allowed?'ALLOWED':'DENIED'}</span><code>${esc(k)}</code>${d.flagged_for_review?' <span class="chip st-review">flagged for review</span>':''}</div>
+      <div>${esc(d.reason)}</div><div class="small muted"><code>${esc(d.reason_code)}</code>${d.rule_basis?' · '+esc(d.rule_basis):''}</div></div>`;}).join('') + '</div>';
 }
 
 function paneDocs(items, key){
@@ -259,16 +309,31 @@ function render(){
   document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{tab=b.dataset.tab;render()});
 }
 
+function tiles(){
+  const t = R.totals;
+  document.getElementById('herobadge').textContent = R.mode === 'live' ? 'Recorded live run' : 'MOCK run';
+  document.getElementById('tiles').innerHTML = [['pass','Checks passed'],['fail','Failed (adjudicated)'],['review','Need human review'],['differs','Hypothesis not confirmed']]
+    .map(([k,l])=>`<div class="tile t-${k}"><div class="num">${t[k]}</div><div class="lab">${l}</div></div>`).join('');
+  const nodes = [['🧭','Orchestrator','Plain-Python coordinator. Releases events in order and logs every handoff.',true],
+    ['💊','Medication Safety Agent','Deterministic engine finds issues; the LLM only explains them.'],
+    ['⚖️','Policy & Legal Adviser','Searches the UAE policy KB and returns requirements with citations.'],
+    ['🔐','Consent module','Grants, expiry, revocation and emergency access, called as a tool.']];
+  document.getElementById('agents').innerHTML = '<h2>Who does what</h2><div class="flow">' + nodes.map(([i,n,d,c])=>
+    `<div class="node ${c?'core':''}"><div class="ic">${i}</div><b>${n}</b><span class="small">${d}</span></div>`).join('') + '</div>';
+}
+
 function eventList(){
   document.getElementById('eventlist').innerHTML = '<h2>The scenario in six events</h2><ol class="tight">' + META.map(m=>
     `<li><a href="#${m.seq}">${esc(m.title)}</a> <span class="muted small">· ${esc(m.at.replace('T',' '))} · ${esc(m.actor)}</span></li>`).join('') + '</ol>';
 }
 
 function resultsPage(){
+  const ks = ['pass','fail','review','differs'];
+  const bar = s => { const tot = ks.reduce((a,k)=>a+s[k],0)||1; return `<div class="bar" title="${ks.map(k=>k+' '+s[k]).join(', ')}">${ks.map(k=>`<i class="b-${k}" style="width:${s[k]/tot*100}%"></i>`).join('')}</div>`; };
   document.getElementById('results').innerHTML = '<h2>Expected vs actual: summary</h2><p class="small muted">Expectations were written before the run. Open an event to see each check.</p>' +
-   '<table><thead><tr><th>Event</th><th>Pass</th><th>Fail</th><th>Review</th><th>Differs</th><th></th></tr></thead><tbody>' + EV.map(e=>
-    `<tr><td>E${e.seq} · ${esc(META[e.seq-1].title)}</td>${['pass','fail','review','differs'].map(k=>`<td>${e.summary[k]}</td>`).join('')}<td><a href="#${e.seq}/checks">details</a></td></tr>`).join('') +
-   `<tr><td><strong>Total</strong></td>${['pass','fail','review','differs'].map(k=>`<td><strong>${R.totals[k]}</strong></td>`).join('')}<td></td></tr></tbody></table>`;
+   '<table><thead><tr><th>Event</th><th style="width:34%">Outcome mix</th><th>Pass</th><th>Fail</th><th>Review</th><th>Differs</th><th></th></tr></thead><tbody>' + EV.map(e=>
+    `<tr><td>E${e.seq} · ${esc(META[e.seq-1].title)}</td><td>${bar(e.summary)}</td>${ks.map(k=>`<td>${e.summary[k]}</td>`).join('')}<td><a href="#${e.seq}/checks">details</a></td></tr>`).join('') +
+   `<tr><td><strong>Total</strong></td><td>${bar(R.totals)}</td>${ks.map(k=>`<td><strong>${R.totals[k]}</strong></td>`).join('')}<td></td></tr></tbody></table>`;
 }
 
 function auditPage(){
@@ -298,7 +363,7 @@ function route(){
 }
 
 function gaps(){
-  document.getElementById('gaps').innerHTML = '<h2>Policy and standards gaps found</h2><p class="small muted">Each statement is checked against the ingested text; absence claims come with full-text scans in the report. Absence in our knowledge base is not proof that no rule exists.</p>' + D.gaps.map(g=>`<div style="margin-bottom:14px"><h3 style="text-transform:none;font-size:15px;color:var(--text)">${esc(g.id)} · ${esc(g.title)}</h3>
+  document.getElementById('gaps').innerHTML = '<h2>Policy and standards gaps found</h2><p class="small muted">Each statement is checked against the ingested text; absence claims come with full-text scans in the report. Absence in our knowledge base is not proof that no rule exists.</p>' + D.gaps.map(g=>`<div class="gcard"><h3 style="text-transform:none;font-size:15px;color:var(--text)"><span class="gid">${esc(g.id)}</span>${esc(g.title)}</h3>
    <p>${esc(g.statement)}</p><p class="small"><strong>Why it matters here:</strong> ${esc(g.relevance)}<br><strong>Recommendation:</strong> ${esc(g.recommendation)}<br><span class="muted">Origin: ${esc(g.origin)} Caveats: ${esc(g.caveats)}</span></p>
    <details><summary>Evidence (${g.evidence.length})${g.comparison.length?' and international comparison':''}</summary>${g.evidence.map(x=>`<div class="small"><strong>${esc(x.label)}</strong>${citation(x.chunk_id)}</div>`).join('')}${g.comparison.map(x=>`<div class="small"><strong>Comparison: ${esc(x.label)}</strong>${citation(x.chunk_id)}</div>`).join('')}</details></div>`).join('');
 }
@@ -308,7 +373,7 @@ document.getElementById('all').onclick=()=>{released=EV.length;render()};
 document.getElementById('reset').onclick=()=>{released=1;current=1;tab='safety';render()};
 document.getElementById('theme').onclick=()=>{const r=document.documentElement,dark=getComputedStyle(r).getPropertyValue('--bg').trim()==='#10141b';r.dataset.theme=dark?'light':'dark'};
 window.addEventListener('hashchange', route);
-runBanner(); eventList(); resultsPage(); auditPage(); gaps(); route();
+runBanner(); tiles(); eventList(); resultsPage(); auditPage(); gaps(); route();
 </script>
 </body>
 </html>
