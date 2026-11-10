@@ -173,7 +173,7 @@ function patientCard(){
     const w = s.withdrawn[id], present = s.meds.some(x=>x.hospital===id);
     return `<span class="chip ${w?'sev-high':present?'ok':'neutral'}" title="${esc(v.label)}">${esc(org(id))} · ${esc(v.emirate)}${w?' · withdrawn':present?'':' · no data yet'}</span>`;}).join(' ');
   document.getElementById('patient').innerHTML = `<div class="patient">
-    <div class="idphoto">${SILHOUETTE}<small>Synthetic patient, no photo</small></div>
+    <div class="idphoto">${SILHOUETTE}</div>
     <div class="pinfo"><h1 class="name">Fatima Hassan</h1>
       <div class="muted small">Synthetic patient · ID fatima-hassan · age ${esc(s.age)}</div>
       <dl class="facts">
@@ -373,6 +373,7 @@ function renderAll(){
 }
 document.getElementById('theme').onclick=()=>{const r=document.documentElement,dark=getComputedStyle(r).getPropertyValue('--bg').trim()==='#0f161a';r.dataset.theme=dark?'light':'dark'};
 window.addEventListener('hashchange', ()=>{renderAll();window.scrollTo(0,0)});
+try{const t=new URLSearchParams(location.search).get('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}
 serverMode = !!D.server;
 renderAll();
 if (serverMode) fetch('/api/reviews').then(r=>r.json()).then(j=>{applyReviewState(j);renderAll()}).catch(()=>{});

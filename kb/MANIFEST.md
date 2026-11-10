@@ -19,3 +19,11 @@ Raw files: `kb/raw/<id>/`. Chunks: `kb/chunks/<id>.jsonl`.
 | `dha-ai-policy-2021` | DHA Policy: Artificial Intelligence in the Healthcare (DHA/HISHD/PP-09, effective 1 July 2021) | Dubai Health Authority | Dubai | policy | 17 | 15 | https://www.dha.gov.ae/uploads/082022/Artificial%20Intelligence%20Policy20228457.pdf |
 | `doh-circular-2026-10-malaffi-onboarding` | DoH Circular 2026/10: Mandatory On-boarding of Minimum Required Dataset with Malaffi | Abu Dhabi Department of Health | Abu Dhabi | circular | 3 | 2 | https://www.doh.gov.ae/-/media/84A213F71AA545D69E01A23A0A99C598.ashx |
 | `doh-circular-2026-144-malaffi-referrals` | DoH Circular 2026/144: Mandatory Submission of Referral Data to Malaffi | Abu Dhabi Department of Health | Abu Dhabi | circular | 2 | 2 | https://www.doh.gov.ae/-/media/C01533BB56EE4A7D9B75107C89656941.ashx |
+
+## Currency, gaps and licence
+
+- **Currency.** Texts were retrieved on 2026-11-07 and are the versions available then. Some may be superseded: the DoH HIE policy is dated April 2020, and the DHA AI policy (effective 1 July 2021) carried a revision date of 1 July 2026 that has passed. Check the issuer's site before relying on any provision.
+- **Not ingested.** Abu Dhabi's AI policy and Responsible AI Standard (the download failed or redirected), and Ministerial Decision 51 of 2021. No cybersecurity or data-localisation instruments beyond Federal Law No. 2 of 2019 and its Executive Regulation are included.
+- **Language.** English text only. Arabic script is dropped, and the Arabic original prevails legally.
+- **Retrieval quality.** Measured on 20 team-written questions: see `docs/report/retrieval-eval.md`. Retrieval is keyword-based (BM25), so a question phrased differently from the text can miss the passage.
+- **Licence.** These are public government and standards documents kept for research and demonstration with their official URLs. Copyright remains with the issuers. Confirm redistribution terms before reusing the raw files outside this repository.

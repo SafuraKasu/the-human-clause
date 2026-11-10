@@ -39,3 +39,11 @@ def test_key_provisions_retrievable(kb, query, scope, doc_id, needle):
 
 def test_scope_filter(kb):
     assert all("EU" in h["scope"] for h in kb.search("personal data processing consent", k=5, scope="EU"))
+
+
+def test_retrieval_eval_cases_are_valid_and_meet_the_recorded_floor():
+    """Regression floor, not a quality claim: see docs/report/retrieval-eval.md for the honest numbers."""
+    from backend.kb.eval_retrieval import run, summarize
+    s = summarize(run(5), 5)
+    assert not s["invalid_cases"]
+    assert s["scoped"]["document_recall"] >= 0.9 and s["scoped"]["passage_recall"] >= 0.7

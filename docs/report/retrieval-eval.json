@@ -1,0 +1,319 @@
+{
+ "summary": {
+  "cases": 20,
+  "k": 5,
+  "invalid_cases": [],
+  "unscoped": {
+   "passage_recall": 0.7,
+   "document_recall": 0.9,
+   "mrr": 0.604
+  },
+  "scoped": {
+   "passage_recall": 0.75,
+   "document_recall": 1.0,
+   "mrr": 0.654
+  }
+ },
+ "rows": [
+  {
+   "question": "May a hospital send a patient's health data to a cloud server in another country?",
+   "scope": "UAE federal",
+   "doc": "uae-health-ict-law-2019",
+   "phrase": "outside State",
+   "phrase_exists": true,
+   "unscoped": {
+    "rank": null,
+    "doc_rank": null
+   },
+   "scoped": {
+    "rank": null,
+    "doc_rank": 3
+   }
+  },
+  {
+   "question": "Can a doctor see a patient's record without written consent if the patient's life is at risk?",
+   "scope": "UAE federal",
+   "doc": "uae-health-ict-law-2019",
+   "phrase": "health and safety of the patient",
+   "phrase_exists": true,
+   "unscoped": {
+    "rank": null,
+    "doc_rank": null
+   },
+   "scoped": {
+    "rank": 1,
+    "doc_rank": 1
+   }
+  },
+  {
+   "question": "Who is allowed to access a patient's health file in an emergency under the executive regulation?",
+   "scope": "UAE federal",
+   "doc": "uae-health-ict-exec-reg-2020",
+   "phrase": "emergency",
+   "phrase_exists": true,
+   "unscoped": {
+    "rank": 1,
+    "doc_rank": 1
+   },
+   "scoped": {
+    "rank": 1,
+    "doc_rank": 1
+   }
+  },
+  {
+   "question": "Does the federal data protection law cover health data that has its own legislation?",
+   "scope": "UAE federal",
+   "doc": "uae-pdpl-2021",
+   "phrase": "health",
+   "phrase_exists": true,
+   "unscoped": {
+    "rank": 1,
+    "doc_rank": 1
+   },
+   "scoped": {
+    "rank": 1,
+    "doc_rank": 1
+   }
+  },
+  {
+   "question": "What does the UAE national AI strategy say about government use of AI?",
+   "scope": "UAE federal",
+   "doc": "uae-ai-strategy-2031",
+   "phrase": "government",
+   "phrase_exists": true,
+   "unscoped": {
+    "rank": 1,
+    "doc_rank": 1
+   },
+   "scoped": {
+    "rank": 1,
+    "doc_rank": 1
+   }
+  },
+  {
+   "question": "Can a Dubai patient withdraw from health information sharing?",
+   "scope": "Dubai",
+   "doc": "dha-consent-access-standard-2025",
+   "phrase": "right to withdraw",
+   "phrase_exists": true,
+   "unscoped": {
+    "rank": 4,
+    "doc_rank": 4
+   },
+   "scoped": {
+    "rank": 4,
+    "doc_rank": 4
+   }
+  },
+  {
+   "question": "Can emergency break-the-glass access override a patient's opt-out in Dubai?",
+   "scope": "Dubai",
+   "doc": "dha-consent-access-standard-2025",
+   "phrase": "should not be retrieved using BTG",
+   "phrase_exists": true,
+   "unscoped": {
+    "rank": null,
+    "doc_rank": 1
+   },
+   "scoped": {
+    "rank": null,
+    "doc_rank": 1
+   }
+  },
+  {
+   "question": "How long does a patient's consent stay valid after their last visit?",
+   "scope": "Dubai",
+   "doc": "dha-consent-access-standard-2025",
+   "phrase": "one year",
+   "phrase_exists": true,
+   "unscoped": {
+    "rank": 1,
+    "doc_rank": 1
+   },
+   "scoped": {
+    "rank": 1,
+    "doc_rank": 1
+   }
+  },
+  {
+   "question": "What audit trail must be kept of who accessed patient information?",
+   "scope": "Dubai",
+   "doc": "dha-consent-access-standard-2025",
+   "phrase": "audit trail",
+   "phrase_exists": true,
+   "unscoped": {
+    "rank": 1,
+    "doc_rank": 1
+   },
+   "scoped": {
+    "rank": 1,
+    "doc_rank": 1
+   }
+  },
+  {
+   "question": "When can health information be shared between Dubai health facilities?",
+   "scope": "Dubai",
+   "doc": "dha-health-info-sharing-2024",
+   "phrase": "Consent must be obtained",
+   "phrase_exists": true,
+   "unscoped": {
+    "rank": null,
+    "doc_rank": 3
+   },
+   "scoped": {
+    "rank": null,
+    "doc_rank": 3
+   }
+  },
+  {
+   "question": "Must AI systems in Dubai healthcare be supervised by a human and overridable?",
+   "scope": "Dubai",
+   "doc": "dha-ai-policy-2021",
+   "phrase": "supervised/monitored",
+   "phrase_exists": true,
+   "unscoped": {
+    "rank": 1,
+    "doc_rank": 1
+   },
+   "scoped": {
+    "rank": 1,
+    "doc_rank": 1
+   }
+  },
+  {
+   "question": "Is patient participation in the Abu Dhabi health information exchange mandatory?",
+   "scope": "Abu Dhabi",
+   "doc": "doh-hie-policy-2020",
+   "phrase": "Universal",
+   "phrase_exists": true,
+   "unscoped": {
+    "rank": 1,
+    "doc_rank": 1
+   },
+   "scoped": {
+    "rank": 1,
+    "doc_rank": 1
+   }
+  },
+  {
+   "question": "Can Abu Dhabi share patient data when consent is not available?",
+   "scope": "Abu Dhabi",
+   "doc": "doh-hie-policy-2020",
+   "phrase": "without",
+   "phrase_exists": true,
+   "unscoped": {
+    "rank": null,
+    "doc_rank": 1
+   },
+   "scoped": {
+    "rank": null,
+    "doc_rank": 1
+   }
+  },
+  {
+   "question": "How must emergency access to a sealed record be handled in Abu Dhabi?",
+   "scope": "Abu Dhabi",
+   "doc": "doh-hie-policy-2020",
+   "phrase": "seal",
+   "phrase_exists": true,
+   "unscoped": {
+    "rank": 3,
+    "doc_rank": 1
+   },
+   "scoped": {
+    "rank": 3,
+    "doc_rank": 1
+   }
+  },
+  {
+   "question": "Must log files of the health information exchange be protected from alteration?",
+   "scope": "Abu Dhabi",
+   "doc": "doh-hie-policy-2020",
+   "phrase": "cannot be altered",
+   "phrase_exists": true,
+   "unscoped": {
+    "rank": 1,
+    "doc_rank": 1
+   },
+   "scoped": {
+    "rank": 1,
+    "doc_rank": 1
+   }
+  },
+  {
+   "question": "Which categories of personal data need extra protection under EU law?",
+   "scope": "EU",
+   "doc": "eu-gdpr-2016-679",
+   "phrase": "special categories",
+   "phrase_exists": true,
+   "unscoped": {
+    "rank": 1,
+    "doc_rank": 1
+   },
+   "scoped": {
+    "rank": 1,
+    "doc_rank": 1
+   }
+  },
+  {
+   "question": "Does a patient have the right to have their data erased?",
+   "scope": "EU",
+   "doc": "eu-gdpr-2016-679",
+   "phrase": "erasure",
+   "phrase_exists": true,
+   "unscoped": {
+    "rank": 2,
+    "doc_rank": 1
+   },
+   "scoped": {
+    "rank": 2,
+    "doc_rank": 1
+   }
+  },
+  {
+   "question": "Can EU citizens opt out of the European Health Data Space?",
+   "scope": "EU",
+   "doc": "eu-ehds-2025-327",
+   "phrase": "opt",
+   "phrase_exists": true,
+   "unscoped": {
+    "rank": 1,
+    "doc_rank": 1
+   },
+   "scoped": {
+    "rank": 1,
+    "doc_rank": 1
+   }
+  },
+  {
+   "question": "What does ITU-T Y.3172 say about a sandbox for testing machine learning?",
+   "scope": "-",
+   "doc": "itu-t-y3172",
+   "phrase": "sandbox",
+   "phrase_exists": true,
+   "unscoped": {
+    "rank": 1,
+    "doc_rank": 1
+   },
+   "scoped": {
+    "rank": 1,
+    "doc_rank": 1
+   }
+  },
+  {
+   "question": "What does the ITU AI readiness framework say about human oversight?",
+   "scope": "-",
+   "doc": "itu-ai-readiness",
+   "phrase": "human-in-the-loop",
+   "phrase_exists": true,
+   "unscoped": {
+    "rank": null,
+    "doc_rank": 1
+   },
+   "scoped": {
+    "rank": null,
+    "doc_rank": 1
+   }
+  }
+ ]
+}
