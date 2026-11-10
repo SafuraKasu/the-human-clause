@@ -7,7 +7,6 @@ Built for the [ITU AI for Good Lab Hackathon: United Arab Emirates (2026)](https
 
 *The animation steps through the six dates of the synthetic "Fatima Hassan" case. The decision shown in the sixth frame is illustrative and is not stored in the committed run.*
 
-> **Demo data only.** Every patient, hospital and prescription is synthetic. The medication-safety knowledge base is a team-curated demonstration set that no clinician has reviewed. This is not a medical device, gives no clinical advice, and the policy summaries are not legal advice.
 
 ## The idea
 
