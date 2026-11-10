@@ -177,7 +177,7 @@ python -m backend.report.export_docx          # -> docs/report/The-Human-Clause-
 
 The report build fails if any citation phrase is missing from the ingested KB.
 
-## Roadmap: patient application (not built)
+## Roadmap & Future Scope: patient application
 
 The same consent module, audit chain and review records are designed to serve a patient-facing app next to the clinician workspace:
 
@@ -187,9 +187,8 @@ The same consent module, audit chain and review records are designed to serve a 
 - **Appeals and objections:** a patient can object to an access or a finding, using the review records (an override is how an appeal is recorded). This needs a real authority and identity model, which is an open policy gap (G2, G3).
 - **Regulator view:** the gap report and audit integrity checks for a health authority or auditor.
 
-None of this is built. It would need authentication, identity verification, secure storage, and clinical and legal review before real use.
 
-## Limitations (not built)
+## Limitations
 
 - **Interface:** a clinician workspace over a recorded run (a static page, or a small local Python server that only records review decisions). No FastAPI service or React app, no live agent runs from the UI, and no patient-facing app.
 - **Clinical content:** the safety knowledge base is a small demonstration set (4 interactions, 2 contraindications, 2 lab rules, 13 ingredients), unverified by a clinician or pharmacist.
@@ -197,7 +196,6 @@ None of this is built. It would need authentication, identity verification, secu
 - **Security:** no authentication, encryption or protected storage. The audit log is tamper-evident, not tamper-proof.
 - **Compliance:** independent validation, appeals and an accountability agreement (DHA AI policy 4.2 to 4.4) are not met.
 - **Model:** free-tier language model; the recorded run was served by the fallback model.
-- No federated learning, adherence reminders or real hospital integrations.
 
 ## Repository guide
 
