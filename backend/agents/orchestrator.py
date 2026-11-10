@@ -9,7 +9,7 @@ import json
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
-from backend.agents.audit import AuditTrail
+from backend.agents.audit import AuditTrail, head_hash, read_jsonl
 from backend.agents.evaluate import evaluate_event, summarize
 from backend.agents.policy_agent import PolicyAgent, PolicyReport
 from backend.agents.safety_agent import SafetyAgent, SafetyReport
@@ -167,7 +167,7 @@ class Orchestrator:
 def write_run(run: RunResult, out_dir: Path) -> Path:
     out_dir.mkdir(parents=True, exist_ok=True)
     run.trail.write_jsonl(out_dir / "audit.jsonl")
-    data = {"mode": run.mode, "models": run.models, "totals": run.totals(), "gap_register": run.gap_register,
+    data = {"audit_head_hash": head_hash(read_jsonl(out_dir / "audit.jsonl")), "mode": run.mode, "models": run.models, "totals": run.totals(), "gap_register": run.gap_register,
             "events": [{
                 "seq": r.event.seq, "title": r.event.title, "at": r.event.at, "summary": r.summary,
                 "escalations": r.escalations, "checks": r.checks,

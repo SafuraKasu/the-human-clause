@@ -62,7 +62,7 @@ Every `audit.jsonl` is written as a hash chain: each entry's hash covers its con
 python -m backend.agents.audit verify data/runs/20261108-005651-live/audit.jsonl
 ```
 
-This detects edited, deleted, inserted or reordered entries. It does not detect entries cut off the end of the log, and someone who rewrites the whole chain can reseal it, so it is tamper-evident, not tamper-proof. `seal` adds hashes to an older unsealed file.
+This detects edited, deleted, inserted or reordered entries. The head hash is also stored in `run.json`, so entries cut off the end are detected too. Someone who rewrites both files can reseal them, so it is tamper-evident, not tamper-proof, and the committed run was sealed after it finished. `seal` adds hashes to an older unsealed file.
 
 ### Human review
 
@@ -75,19 +75,37 @@ python -m backend.review record --run data/runs/20261108-005651-live --item E5:e
 python -m backend.review show   --run data/runs/20261108-005651-live
 ```
 
-Decisions are `uphold`, `override` (also how an appeal is recorded) or `defer`. They are saved to `reviews.jsonl` as a hash chain tied to the run's audit trail. This is record-only: it changes no consent state or finding, the role is not verified, and there is no authentication. The committed run has no reviews recorded, so every item shows as awaiting a human. Rebuild the viewer afterwards to see them.
+Decisions are `uphold`, `override` (also how an appeal is recorded) or `defer`. They are saved to `reviews.jsonl` as a hash chain tied to the run's audit trail. This is record-only: it changes no consent state or finding, the role is not verified, and there is no authentication. The committed run has no reviews recorded, so every item shows as open. `reviews.jsonl` is git-ignored so local testing does not alter the committed run. Decisions can also be recorded in the clinician workspace (`python -m backend.app`).
 
-### Offline demo viewer
+### Clinician workspace
 
-Open [docs/demo/index.html](docs/demo/index.html) in a browser. It replays the recorded live run and calls no model. It has five pages:
+The interface is built for **clinicians**: one patient's record, the safety alerts, what data may be used and why, and the decisions only a person can make. It shows a recorded live run and calls no model.
 
-- **Overview:** headline results, who does what, and the six events.
-- **Scenario:** step through the events and open each event's findings, consent decisions, policy citations, expected vs actual checks and audit entries.
-- **Results:** pass, fail, review and differs counts per event.
-- **Gaps:** the policy and standards gap report with evidence.
-- **Audit:** the full audit trail with filters, the chain integrity result, and a JSONL export.
+- **Offline page:** open [docs/demo/index.html](docs/demo/index.html) in a browser. It is read-only.
+- **Local app:** `python -m backend.app` then open http://127.0.0.1:8000. Same page, plus a form to record human review decisions (record-only, tied to the audit chain). It binds to localhost only and needs no extra packages.
 
-Rebuild it with `python -m backend.viewer.build_viewer`.
+What the page shows:
+
+- **Patient record:** synthetic patient banner (placeholder silhouette, no photo), conditions, allergies, labs and sources. A "show the record as of" date selector replays how the record and alerts changed as information arrived.
+- **Alerts:** medication-safety findings, highest severity first, with the evidence reference. The language model's patient-worded text is kept in a labelled drop-down. The page never recommends stopping or changing a dose.
+- **Medicines and data access:** which hospital prescribed what, what is withheld because the patient withdrew consent, and why each access request was allowed or denied, with the rule.
+- **Needs your decision:** escalations and high-severity alerts at that date, with uphold / override / defer.
+- **Policy guidance:** what the rules say for that situation, with expandable cited source text.
+- **Evaluation, Audit trail, Policy gaps, About:** expected vs actual checks, the audit trail with integrity check and JSONL export, the gap report, and the limits of the prototype.
+
+Rebuild the page with `python -m backend.viewer.build_viewer`.
+
+### Roadmap: patient application (not built)
+
+The same consent module, audit chain and review records are designed to serve a patient-facing app next to the clinician workspace:
+
+- **Consent dashboard:** who can see which categories of data (medications, labs, allergies, conditions), for what purpose and until when, with grant, revoke and exchange opt-out controls that call `backend/consent/`.
+- **Access history:** every access request and decision (including emergency "break-the-glass" access) in plain language, read from the audit trail.
+- **Patient-facing explanations:** the plain-language alert wording already produced by the Safety agent, shown to the patient with a clear "talk to your doctor or pharmacist" message and no dose advice.
+- **Appeals and objections:** a patient can object to an access or a finding; this would use the review records (an override is how an appeal is recorded) and would need a real authority and identity model, which is an open policy gap (G2/G3).
+- **Regulator view:** the gap report and audit integrity checks for a health authority or auditor.
+
+None of this is built. It would need authentication, identity verification, secure storage and a clinical and legal review before real use.
 
 ### Live mode
 
@@ -124,7 +142,7 @@ The final recorded live run is `data/runs/20261108-005651-live`: 42 pass, 5 fail
 
 ## Limitations (not built)
 
-- No FastAPI service or React UI. The demo is a command-line runner plus a static HTML viewer of a recorded run.
+- No FastAPI service or React UI. The interface is a clinician workspace (a static page, or a small local Python server that only records review decisions) over a recorded run; agents are not run from the UI. No patient-facing app (see the roadmap above).
 - No federated learning, adherence reminders or real hospital integrations.
 - The KB uses English text only, and Arabic prevails legally. Some sources may be superseded (for example the 2020 Abu Dhabi HIE policy). Abu Dhabi's AI policy could not be downloaded and is not ingested.
 - The audit log is tamper-evident, not tamper-proof: there is no protected storage, authentication or encryption.

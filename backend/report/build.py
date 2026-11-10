@@ -194,7 +194,7 @@ Healthcare, medication safety. Fatima Hassan, 72 (synthetic), has kidney disease
 ## Limitations and honest status
 
 - The medication knowledge base is a **small team-curated demonstration set** (4 interactions, 2 contraindications, 2 lab rules, 13 ingredients), not clinically validated and not reviewed by a clinician.
-- No independent validation, authentication, encryption or tamper-proof logging; no real hospital integration; synthetic data only.
+- No independent validation, authentication or encryption; audit log is tamper-evident (hash chain, sealed after the run) but not tamper-proof; no real hospital integration; synthetic data only.
 - The policy KB holds English text only (Arabic originals prevail legally). Not ingested: Abu Dhabi's AI policy and Responsible AI Standard (download failed), and Ministerial Decision 51 of 2021.
 - The language model is a free-tier Gemini model; outputs vary between runs, so results come from a recorded run that is replayable from cache.
 - Policy findings are retrieval-based summaries of what the texts say, not legal advice. Absence in the KB is not absence in law.

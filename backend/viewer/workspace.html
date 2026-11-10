@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Human Clause: clinician workspace</title>
+<style>
+:root{--bg:#f4f7f9;--surface:#fff;--text:#16303a;--muted:#587079;--line:#dbe4e9;--accent:#0b6e8a;--accent-soft:#e5f2f6;
+--sil:#9fb8c2;--sil2:#d3e2e8;
+--crit:#9b1c1c;--crit-bg:#fde8e8;--high:#a64306;--high-bg:#fdeede;--mod:#7a6000;--mod-bg:#fdf6d8;--low:#2d6a4f;--low-bg:#e3f4ea;--info:#4a5a63;--info-bg:#eaf0f3;
+--ok:#1e6b3a;--ok-bg:#e3f4ea;--bad:#9b1c1c;--bad-bg:#fde8e8;--rev:#7a5a00;--rev-bg:#fdf6d8;--dif:#3b4a8a;--dif-bg:#e8ebfa}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f161a;--surface:#161f24;--text:#e5edf0;--muted:#98acb4;--line:#27343b;--accent:#6cc4dc;--accent-soft:#17303a;--sil:#4d6a76;--sil2:#2b4048;
+--crit:#ff9b9b;--crit-bg:#3a1a1a;--high:#ffb784;--high-bg:#3a2515;--mod:#f0d77a;--mod-bg:#38300f;--low:#8fd6b0;--low-bg:#173326;--info:#b4c3ca;--info-bg:#212c32;
+--ok:#8fd6b0;--ok-bg:#173326;--bad:#ff9b9b;--bad-bg:#3a1a1a;--rev:#f0d77a;--rev-bg:#38300f;--dif:#a9b6f5;--dif-bg:#1f2644}}
+:root[data-theme="dark"]{--bg:#0f161a;--surface:#161f24;--text:#e5edf0;--muted:#98acb4;--line:#27343b;--accent:#6cc4dc;--accent-soft:#17303a;--sil:#4d6a76;--sil2:#2b4048;
+--crit:#ff9b9b;--crit-bg:#3a1a1a;--high:#ffb784;--high-bg:#3a2515;--mod:#f0d77a;--mod-bg:#38300f;--low:#8fd6b0;--low-bg:#173326;--info:#b4c3ca;--info-bg:#212c32;
+--ok:#8fd6b0;--ok-bg:#173326;--bad:#ff9b9b;--bad-bg:#3a1a1a;--rev:#f0d77a;--rev-bg:#38300f;--dif:#a9b6f5;--dif-bg:#1f2644}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 "Segoe UI",system-ui,-apple-system,Roboto,sans-serif}
+a{color:var(--accent)}
+.wrap{max-width:1140px;margin:0 auto;padding:0 16px 60px}
+.top{background:var(--surface);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:16px;padding-top:10px;padding-bottom:10px;flex-wrap:wrap}
+.brand{font-weight:700;font-size:17px;color:var(--accent);display:flex;align-items:center;gap:8px;white-space:nowrap}
+.brand svg{width:22px;height:22px}
+nav.nav{display:flex;gap:2px;flex-wrap:wrap;flex:1}
+.nav a{padding:6px 12px;border-radius:8px;color:var(--muted);text-decoration:none;font-weight:600;font-size:14px}
+.nav a[aria-current="page"]{background:var(--accent-soft);color:var(--accent)}
+.nav a:hover{color:var(--text)}
+.nav .count{display:inline-block;min-width:18px;padding:0 5px;margin-left:4px;border-radius:999px;background:var(--high-bg);color:var(--high);font-size:12px;text-align:center}
+button,select,input,textarea{font:inherit;color:var(--text)}
+button{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:6px 12px;cursor:pointer}
+button:hover:not(:disabled){border-color:var(--accent)}button:disabled{opacity:.5;cursor:not-allowed}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+button:focus-visible,summary:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.demo-bar{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:6px 0}
+.demo-bar .wrap{padding-bottom:0}
+.page{display:none;padding-top:18px}.page.active{display:block}
+h1{font-size:22px;margin:0}h2{font-size:17px;margin:0 0 10px}h3{font-size:12.5px;margin:14px 0 6px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:14px}
+.card h2 .n{font-weight:500;color:var(--muted);font-size:14px}
+.muted{color:var(--muted)}.small{font-size:13px}
+code{font:12.5px ui-monospace,Consolas,monospace;background:var(--info-bg);padding:1px 5px;border-radius:4px;word-break:break-word}
+.chip{display:inline-block;padding:1px 9px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
+.sev-critical{color:var(--crit);background:var(--crit-bg)}.sev-high{color:var(--high);background:var(--high-bg)}.sev-moderate{color:var(--mod);background:var(--mod-bg)}.sev-low{color:var(--low);background:var(--low-bg)}.sev-informational,.neutral{color:var(--info);background:var(--info-bg)}
+.st-pass,.ok{color:var(--ok);background:var(--ok-bg)}.st-fail,.no{color:var(--bad);background:var(--bad-bg)}.st-review{color:var(--rev);background:var(--rev-bg)}.st-differs{color:var(--dif);background:var(--dif-bg)}
+.new{color:var(--accent);background:var(--accent-soft)}
+.banner{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 14px;margin:10px 0;font-size:14px}
+.banner.warn{border-color:var(--high);background:var(--high-bg)}.banner.esc{border-color:var(--crit);background:var(--crit-bg)}.banner.live{border-color:var(--ok);background:var(--ok-bg)}
+/* patient banner */
+.patient{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.idphoto{width:104px;height:130px;border-radius:10px;border:1px solid var(--line);background:var(--sil2);overflow:hidden;flex:none;position:relative}
+.idphoto svg{width:100%;height:100%;display:block}
+.idphoto small{position:absolute;left:0;right:0;bottom:0;background:rgba(0,0,0,.45);color:#fff;font-size:10px;text-align:center;padding:2px 0}
+.pinfo{flex:1;min-width:min(240px,100%)}.cols>*,.facts>*{min-width:0}.chip{max-width:100%}
+.pinfo .name{font-size:22px;font-weight:700;margin:0}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px 18px;margin-top:10px}
+.facts dt{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}.facts dd{margin:0;font-size:14px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+/* as-of selector */
+.asof{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:12px 0 0}
+.asof button{padding:5px 11px;font-size:13px}.asof button[aria-checked="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.asof .lab{font-size:12.5px;color:var(--muted);margin-right:4px}
+.update{margin-top:12px;border-left:3px solid var(--accent);padding:2px 0 2px 12px}
+.update b{display:block}
+.cols{display:grid;grid-template-columns:1.25fr 1fr;gap:14px;align-items:start}
+@media(max-width:900px){.cols{grid-template-columns:1fr}.idphoto{width:84px;height:104px}}
+.cardgrid{display:grid;gap:10px}
+.item{border:1px solid var(--line);border-left:5px solid var(--info);border-radius:10px;padding:11px 14px;background:var(--surface)}
+.item.s-critical{border-left-color:var(--crit)}.item.s-high{border-left-color:var(--high)}.item.s-moderate{border-left-color:var(--mod)}.item.s-low{border-left-color:var(--low)}
+.item.allow{border-left-color:var(--ok)}.item.deny{border-left-color:var(--bad)}.item.pending{border-left-color:var(--high)}.item.done{border-left-color:var(--ok)}
+.item .top2{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:4px}.item .ttl{font-weight:650}
+.safeline{margin-top:6px;font-size:12.5px;color:var(--muted)}
+table{width:100%;border-collapse:collapse;font-size:13.5px}th,td{text-align:left;vertical-align:top;padding:7px 8px;border-bottom:1px solid var(--line)}
+th{color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+.scroll{overflow-x:auto}
+details{margin:4px 0}summary{cursor:pointer;color:var(--accent)}
+blockquote{margin:6px 0 8px;padding:8px 12px;border-left:3px solid var(--line);background:var(--bg);font-size:13px;white-space:pre-wrap}
+ul.tight{margin:4px 0 8px 18px;padding:0}
+form.rv{display:grid;gap:8px;margin-top:8px;padding:10px;background:var(--bg);border-radius:8px}
+form.rv .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:600px){form.rv .row{grid-template-columns:1fr}}
+form.rv label{font-size:12.5px;color:var(--muted);display:grid;gap:3px}
+form.rv input,form.rv select,form.rv textarea{border:1px solid var(--line);border-radius:6px;padding:6px 8px;background:var(--surface)}
+form.rv .err{color:var(--bad);font-size:13px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:10px 0}
+.tile{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--line);border-radius:10px;padding:10px 14px}
+.tile .num{font-size:30px;font-weight:700;line-height:1.1}.tile .lab{font-size:13px;color:var(--muted)}
+.tile.t-pass{border-top-color:var(--ok)}.tile.t-pass .num{color:var(--ok)}.tile.t-fail{border-top-color:var(--bad)}.tile.t-fail .num{color:var(--bad)}
+.tile.t-review{border-top-color:var(--rev)}.tile.t-review .num{color:var(--rev)}.tile.t-differs{border-top-color:var(--dif)}.tile.t-differs .num{color:var(--dif)}
+.bar{display:flex;height:10px;border-radius:999px;overflow:hidden;background:var(--info-bg);min-width:120px}.bar i{display:block}
+.bar .b-pass{background:var(--ok)}.bar .b-fail{background:var(--bad)}.bar .b-review{background:#d4a017}.bar .b-differs{background:var(--dif)}
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}
+.node{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--bg)}.node b{display:block}
+.controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 3v18M3 12h18"/></svg>The Human Clause</div>
+    <nav class="nav" id="nav" aria-label="Sections"></nav>
+    <button id="theme" aria-label="Toggle colour theme">Theme</button>
+  </div>
+</header>
+<div class="demo-bar"><div class="wrap" id="demobar"></div></div>
+<div class="wrap">
+  <section class="page" id="page-workspace">
+    <div class="card" id="patient"></div>
+    <div class="cols">
+      <div>
+        <div class="card" id="alerts"></div>
+        <div class="card" id="decisions"></div>
+      </div>
+      <div>
+        <div class="card" id="meds"></div>
+        <div class="card" id="access"></div>
+      </div>
+    </div>
+    <div class="card" id="policy"></div>
+  </section>
+  <section class="page" id="page-evaluation"><div class="card" id="evaluation"></div></section>
+  <section class="page" id="page-audit"><div class="card" id="auditpage"></div></section>
+  <section class="page" id="page-gaps"><div class="card" id="gaps"></div></section>
+  <section class="page" id="page-about"><div class="card" id="about"></div></section>
+</div>
+<script id="data" type="application/json">__DATA__</script>
+<script>
+const D = JSON.parse(document.getElementById('data').textContent);
+const R = D.run, EV = R.events, META = D.events_meta, SNAP = D.snapshots;
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const PREV_TITLE = {}; EV.forEach(e=>e.safety.findings.forEach(f=>PREV_TITLE[f.finding_id]=f.title));
+const SEV_ORDER = ['critical','high','moderate','low','informational'];
+const ST_LABEL = {pass:'Met', fail:'Not met', review:'Needs a person to judge', differs:'Not confirmed by the agent'};
+const org = o => o.replace('Hospital','Hospital ');
+const dayLab = n => { const d = day(META[n-1].at), dup = META.filter(m=>day(m.at)===d).length>1; return dup ? d+' '+META[n-1].at.slice(11,16) : d; };
+const day = at => new Date(at).toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+const dt = at => at.replace('T',' ');
+let asOf = EV.length, serverMode = false;
+
+const sevChip = s => `<span class="chip sev-${esc(s)}">${esc(s)}</span>`;
+const stChip = s => `<span class="chip st-${esc(s)}">${esc(ST_LABEL[s]||s)}</span>`;
+
+function citation(cid){
+  const c = D.chunks[cid]; if(!c) return `<code>${esc(cid)}</code>`;
+  const where = c.section.startsWith('p.') ? c.section : `${c.section}, p.${c.page}`;
+  return `<details><summary>${esc(c.document)} · ${esc(where)}</summary><blockquote>${esc(c.text)}</blockquote><div class="small muted"><code>${esc(cid)}</code> · ${esc(c.scope)} · <a href="${esc(c.url)}" target="_blank" rel="noopener">official source</a></div></details>`;
+}
+
+/* ---------- silhouette (inline SVG, no photo, no facial features) ---------- */
+const SILHOUETTE = `<svg viewBox="0 0 120 150" role="img" aria-label="Silhouette of a woman wearing a hijab (placeholder, not a photo)">
+  <rect width="120" height="150" fill="var(--sil2)"/>
+  <path d="M60 16C38 16 28 36 28 58c0 14-4 25-15 38l-1 54h96l-1-54c-11-13-15-24-15-38 0-22-10-42-32-42z" fill="var(--sil)"/>
+  <ellipse cx="60" cy="58" rx="17" ry="22" fill="var(--sil2)"/>
+  <path d="M44 150c0-14 7-22 16-22s16 8 16 22z" fill="var(--sil2)" opacity=".55"/>
+</svg>`;
+
+/* ---------- header, nav ---------- */
+function drawNav(page){
+  const pending = Object.values(D.review_status).filter(v=>!v).length;
+  const pages = [['workspace','Patient record'],['evaluation','Evaluation'],['audit','Audit trail'],['gaps','Policy gaps'],['about','About']];
+  document.getElementById('nav').innerHTML = pages.map(([k,l])=>`<a href="#${k}" ${k===page?'aria-current="page"':''}>${l}${k==='audit'&&pending?`<span class="count" title="${pending} items await a human decision">${pending}</span>`:''}</a>`).join('');
+  const live = R.mode==='live';
+  document.getElementById('demobar').innerHTML = `Synthetic demonstration data. ${live?'Recorded live run':'MOCK run, not an observed outcome'} · model ${esc(R.models.join(', '))} · not for clinical use.`;
+}
+
+/* ---------- patient banner ---------- */
+function patientCard(){
+  const s = SNAP[asOf-1], m = META[asOf-1];
+  const egfr = s.labs.egfr, k = s.labs.potassium;
+  const labs = egfr ? `eGFR ${esc(egfr.value)} (${esc(egfr.date)})${k?`, potassium ${esc(k.value)} (${esc(k.date)})`:''}` : '<span class="chip st-review">eGFR not on file</span>';
+  const srcs = Object.entries(D.sources).map(([id,v])=>{
+    const w = s.withdrawn[id], present = s.meds.some(x=>x.hospital===id);
+    return `<span class="chip ${w?'sev-high':present?'ok':'neutral'}" title="${esc(v.label)}">${esc(org(id))} · ${esc(v.emirate)}${w?' · withdrawn':present?'':' · no data yet'}</span>`;}).join(' ');
+  document.getElementById('patient').innerHTML = `<div class="patient">
+    <div class="idphoto">${SILHOUETTE}<small>Synthetic patient, no photo</small></div>
+    <div class="pinfo"><h1 class="name">Fatima Hassan</h1>
+      <div class="muted small">Synthetic patient · ID fatima-hassan · age ${esc(s.age)}</div>
+      <dl class="facts">
+        <div><dt>Conditions</dt><dd class="chips">${s.conditions.map(c=>`<span class="chip neutral">${esc(c)}</span>`).join('')}</dd></div>
+        <div><dt>Allergies</dt><dd class="chips">${s.allergies.length?s.allergies.map(c=>`<span class="chip sev-high">${esc(c)}</span>`).join(''):'none recorded'}</dd></div>
+        <div><dt>Latest labs</dt><dd>${labs}</dd></div>
+        <div><dt>Records from</dt><dd class="chips">${srcs}</dd></div>
+      </dl></div></div>
+    <div class="asof" role="radiogroup" aria-label="Show the record as of">
+      <span class="lab">Show the record as of:</span>${EV.map(e=>`<button role="radio" aria-checked="${e.seq===asOf}" data-asof="${e.seq}" title="${esc(META[e.seq-1].title)}">${esc(dayLab(e.seq))}</button>`).join('')}</div>
+    <div class="update"><b>${esc(m.title)}</b><span class="small muted">${esc(dt(m.at))} · ${esc(m.actor)}</span><div>${esc(m.narrative)}</div></div>`;
+  document.querySelectorAll('[data-asof]').forEach(b=>b.onclick=()=>{asOf=+b.dataset.asof;location.hash='#record/'+asOf;});
+}
+
+/* ---------- alerts ---------- */
+function alertsCard(){
+  const e = EV[asOf-1], s = e.safety;
+  const prev = asOf>1 ? new Set(EV[asOf-2].safety.findings.map(f=>f.finding_id)) : new Set();
+  const list = [...s.findings].sort((a,b)=>SEV_ORDER.indexOf(a.severity)-SEV_ORDER.indexOf(b.severity));
+  let h = `<h2>Medication safety alerts <span class="n">(${list.length})</span></h2>`;
+  if (s.limitations.length) h += `<div class="banner warn"><strong>This assessment is incomplete.</strong> ${s.limitations.map(esc).join('<br>')}</div>`;
+  if (!list.length) h += '<p class="muted">No alerts from the available knowledge base. This does not mean the medicines are safe.</p>';
+  h += '<div class="cardgrid">' + list.map(f=>{
+    const src = s.explanation_source[f.finding_id], isNew = !prev.has(f.finding_id) && asOf>1;
+    return `<div class="item s-${esc(f.severity)}"><div class="top2">${sevChip(f.severity)}<span class="chip neutral">${esc(f.certainty)}</span>${isNew?'<span class="chip new">new at this date</span>':''}<span class="ttl">${esc(f.title)}</span></div>
+      <div>${esc(f.explanation)}</div>
+      ${f.patient_factors.length?`<div class="small muted">Patient factors: ${f.patient_factors.map(esc).join('; ')}</div>`:''}
+      <div class="safeline">Discuss with the prescriber or a pharmacist. This system never recommends stopping, starting or changing a dose; the clinician decides.</div>
+      <div class="small muted" style="margin-top:4px">Evidence ${esc(f.evidence.reference_id||'n/a')} · demonstration knowledge base ${esc(f.evidence.kb_version)} </div>${s.explanations[f.finding_id]&&s.explanations[f.finding_id]!==f.explanation?`<details><summary>Plain-language wording for the patient (${src==='llm'?'written by the language model':'rule-engine text'})</summary><blockquote>${esc(s.explanations[f.finding_id])}</blockquote></details>`:''}</div>`;}).join('') + '</div>';
+  const gone = [...prev].filter(id=>!s.findings.some(f=>f.finding_id===id));
+  if (gone.length) h += `<p class="small muted">No longer shown at this date: ${gone.map(x=>esc(PREV_TITLE[x]||x)).join('; ')} (resolved by new information, or the data was withheld at the patient's request).</p>`;
+  document.getElementById('alerts').innerHTML = h;
+}
+
+/* ---------- medications ---------- */
+function medsCard(){
+  const s = SNAP[asOf-1];
+  let h = `<h2>Medications <span class="n">(${s.meds.length})</span></h2>`;
+  h += '<div class="scroll"><table><thead><tr><th>Medicine</th><th>Prescribed at</th><th>Status</th></tr></thead><tbody>' +
+    s.meds.map(m=>`<tr><td>${esc(m.name)}</td><td>${esc(org(m.hospital))}<div class="small muted">${esc(D.sources[m.hospital].emirate)}</div></td><td>${m.withheld?'<span class="chip sev-high">Withheld: patient withdrew consent</span>':'<span class="chip ok">Used in assessment</span>'}</td></tr>`).join('') + '</tbody></table></div>';
+  if (Object.keys(s.withdrawn).length) h += `<p class="small muted">Withheld medicines are still on record at their hospital but are not used here. Information already shared earlier may remain in other records.</p>`;
+  document.getElementById('meds').innerHTML = h;
+}
+
+/* ---------- data access ---------- */
+function accessCard(){
+  const e = EV[asOf-1], m = META[asOf-1], keys = Object.keys(e.consent);
+  let h = '<h2>Data access at this date</h2>';
+  if (e.escalations.length) h += `<div class="banner esc"><strong>Escalated to a human.</strong> The system did not override either rule on its own.</div>`;
+  if (!keys.length) h += '<p class="muted">No access requests at this date.</p>';
+  h += '<div class="cardgrid">' + keys.map(k=>{const d=e.consent[k];
+    return `<div class="item ${d.allowed?'allow':'deny'}"><div class="top2"><span class="chip ${d.allowed?'ok':'no'}">${d.allowed?'Allowed':'Denied'}</span>${d.escalate?'<span class="chip sev-critical">needs a human decision</span>':''}</div>
+      <div><strong>${esc(m.access[k]||k)}</strong></div><div class="small">${esc(d.reason)}</div>
+      ${d.rule_basis?`<div class="small muted">Rule: ${esc(d.rule_basis)}</div>`:''}</div>`;}).join('') + '</div>';
+  document.getElementById('access').innerHTML = h;
+}
+
+/* ---------- decisions ---------- */
+const evOf = id => +id.slice(1,id.indexOf(':'));
+const reviewable = () => Object.keys(D.review_status).filter(id=>evOf(id)===asOf);
+function itemInfo(id){
+  const ev = EV[+id.slice(1,id.indexOf(':'))-1], [, kind, ref] = id.split(':');
+  if (kind==='escalation'){ const x = ev.escalations.find(z=>z.label===ref); return {title:'Emergency access request needs your decision', text:x.reason, basis:x.basis}; }
+  const f = ev.safety.findings.find(z=>z.finding_id===id.split(':').slice(2).join(':')); return {title:f.title, text:'High-severity alert: confirm that you have seen it and what you decided.', basis:''};
+}
+function reviewForm(id){
+  const cmd = `python -m backend.review record --run data/runs/${D.run_id} --item ${id} --decision uphold|override|defer --reviewer "Name" --role "clinician" --reason "at least 15 characters"`;
+  if (!serverMode) return `<details><summary>Command to record a decision</summary><div class="small"><code>${esc(cmd)}</code></div></details>`;
+  return `<details><summary>Record a decision</summary><form class="rv" data-item="${esc(id)}">
+    <label>Decision<select name="decision"><option value="uphold">Uphold: I agree with the system's output</option><option value="override">Override: I disagree, my decision replaces it</option><option value="defer">Defer: pass it to someone else</option></select></label>
+    <div class="row"><label>Your name<input name="reviewer" required maxlength="80"></label><label>Your role (as you state it)<input name="role" required maxlength="80" placeholder="e.g. consultant physician"></label></div>
+    <label>Reason (at least 15 characters)<textarea name="reason" rows="2" required maxlength="1000"></textarea></label>
+    <div class="err" role="alert"></div><div><button class="primary" type="submit">Record decision</button> <span class="small muted">Record only: nothing is released or changed.</span></div></form></details>`;
+}
+function decisionsCard(){
+  const ids = reviewable(), pending = ids.filter(id=>!D.review_status[id]).length;
+  const later = Object.keys(D.review_status).filter(id=>evOf(id)<asOf&&!D.review_status[id]).length;
+  let h = `<h2>Needs your decision <span class="n">(${pending} open of ${ids.length} at this date)</span></h2>${serverMode?'':'<div class="banner">This page is read-only. Run <code>python -m backend.app</code> to record decisions here, or use the command line under each item.</div>'}<p class="small muted">Escalations and high-severity alerts raised at this date${later?` (${later} earlier item${later>1?'s':''} still open: pick an earlier date to see ${later>1?'them':'it'})`:''}. Decisions are recorded with your name and stated role, and are tied to the audit trail. They do not change consent or any finding.</p>`;
+  if (!ids.length) h += '<p class="muted">Nothing needs a decision at this date.</p>';
+  h += '<div class="cardgrid">' + ids.map(id=>{
+    const r = D.review_status[id], i = itemInfo(id);
+    return `<div class="item ${r?'done':'pending'}"><div class="top2">${r?`<span class="chip ${r.decision==='override'?'st-differs':r.decision==='uphold'?'ok':'st-review'}">${esc(r.decision)}</span>`:'<span class="chip st-review">open</span>'}<span class="ttl">${esc(i.title)}</span></div>
+      <div class="small">${esc(i.text)}</div>${i.basis?`<div class="small muted">Rule: ${esc(i.basis)}</div>`:''}
+      ${r?`<div class="small" style="margin-top:6px"><strong>Decision #${r.seq}:</strong> ${esc(r.decision)} by ${esc(r.reviewer)} (${esc(r.role_as_stated)}, role as stated, not verified). ${esc(r.reason)}</div>`:''}
+      ${reviewForm(id)}</div>`;}).join('') + '</div>';
+  const box = document.getElementById('decisions'); box.innerHTML = h;
+  box.querySelectorAll('form.rv').forEach(f=>f.onsubmit=ev=>{ev.preventDefault();submitReview(f)});
+}
+async function submitReview(f){
+  const body = {item:f.dataset.item, ...Object.fromEntries(new FormData(f))}, err = f.querySelector('.err');
+  err.textContent = '';
+  try{
+    const res = await fetch('/api/review',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const j = await res.json();
+    if(!res.ok){ err.textContent = j.error || 'Could not record the decision.'; return; }
+    applyReviewState(j); renderAll();
+  }catch(x){ err.textContent = 'The app is not reachable: ' + x; }
+}
+function applyReviewState(j){ D.reviews=j.reviews; D.review_status=j.review_status; D.review_integrity=j.review_integrity; }
+
+/* ---------- policy guidance ---------- */
+function paneDocs(items, key){ return items.map(i=>`<li>${esc(i[key])}<div>${(i.citations||[]).map(citation).join('')}</div></li>`).join(''); }
+function policyCard(){
+  const p = EV[asOf-1].policy;
+  let h = '<h2>Policy guidance for this date</h2>';
+  if (!p){ document.getElementById('policy').innerHTML = h+'<p class="muted">The Policy adviser was not asked anything at this date.</p>'; return; }
+  h += `<p><strong>Question put to the Policy adviser:</strong> ${esc(p.question)}</p>`;
+  if (p.requirements.length) h += `<h3>What the rules say</h3><ul class="tight">${paneDocs(p.requirements,'statement')}</ul>`;
+  if (p.conflicts.length) h += `<h3>Where rules conflict</h3><ul class="tight">${paneDocs(p.conflicts,'description')}</ul>`;
+  if (p.comparisons.length) h += `<h3>International comparison</h3><ul class="tight">${paneDocs(p.comparisons,'statement')}</ul>`;
+  if (p.gaps.length) h += `<h3>Gaps the adviser raised</h3><ul class="tight">${p.gaps.map(g=>`<li><strong>${esc(g.title)}</strong>: ${esc(g.description)}<div>${(g.citations||[]).map(citation).join('')}</div>${g.note?`<div class="small muted">${esc(g.note)}</div>`:''}
+    ${(g.unretrieved_candidates||[]).length?`<div class="small"><strong>Independent check:</strong> passages the adviser did not retrieve that may bear on this: ${g.unretrieved_candidates.map(c=>citation(c.chunk_id)).join('')}</div>`:''}</li>`).join('')}</ul>`;
+  h += `<details><summary>How the adviser worked: ${p.searches.length} searches (real tool-call log)</summary><ul class="tight small">${p.searches.map(s=>`<li>[${esc(s.scope||'all jurisdictions')}] “${esc(s.query)}” → ${s.results.length} passages</li>`).join('')}</ul></details>`;
+  if (p.issues.length) h += `<details><summary>Guard-rail log (${p.issues.length})</summary><ul class="tight small">${p.issues.map(i=>`<li>${esc(i)}</li>`).join('')}</ul></details>`;
+  if (!p.completed) h += '<div class="banner warn">The Policy adviser did not complete at this date.</div>';
+  h += '<p class="small muted">The adviser summarises ingested texts and cites them. It is not legal advice. Absence of a rule in our knowledge base does not prove none exists.</p>';
+  document.getElementById('policy').innerHTML = h;
+}
+
+/* ---------- evaluation ---------- */
+function evaluationPage(){
+  const t = R.totals, ks = ['pass','fail','review','differs'];
+  const bar = s => { const tot = ks.reduce((a,k)=>a+s[k],0)||1; return `<div class="bar" title="${ks.map(k=>ST_LABEL[k]+' '+s[k]).join(', ')}">${ks.map(k=>`<i class="b-${k}" style="width:${s[k]/tot*100}%"></i>`).join('')}</div>`; };
+  const fmt = v => typeof v === 'object' ? esc(JSON.stringify(v)) : esc(v);
+  document.getElementById('evaluation').innerHTML = `<h2>Evaluation: what we expected and what the agents did</h2>
+   <p class="muted">For each of the six events we wrote the expected outcome <em>before</em> running the agents, then compared. The expectations were not edited after the run (see the decisions log in the repository); checks that were not met were reviewed against the source text, and the review notes are shown under each check.</p>
+   <div class="tiles">${ks.map(k=>`<div class="tile t-${k}"><div class="num">${t[k]}</div><div class="lab">${esc(ST_LABEL[k])}</div></div>`).join('')}</div>
+   <div class="banner ${R.mode==='live'?'live':'warn'}"><strong>${R.mode==='live'?'Recorded live run':'MOCK run, not an observed outcome'}</strong> · model ${esc(R.models.join(', '))} · run <code>${esc(D.run_id)}</code></div>
+   <div class="scroll"><table><thead><tr><th>Event</th><th style="width:30%">Outcome mix <span class="small muted" style="text-transform:none">(green met · red not met · amber judge · blue not confirmed)</span></th><th>Met</th><th>Not met</th><th>Judge</th><th>Not confirmed</th></tr></thead><tbody>${EV.map(e=>`<tr><td>${esc(day(META[e.seq-1].at))} · ${esc(META[e.seq-1].title)}</td><td>${bar(e.summary)}</td>${ks.map(k=>`<td>${e.summary[k]}</td>`).join('')}</tr>`).join('')}
+   <tr><td><strong>Total</strong></td><td>${bar(t)}</td>${ks.map(k=>`<td><strong>${t[k]}</strong></td>`).join('')}</tr></tbody></table></div>
+   <h3>Every check, by event</h3>${EV.map(e=>`<details><summary>${esc(day(META[e.seq-1].at))} · ${esc(META[e.seq-1].title)}</summary>
+    ${e.expected_notes.length?`<p class="small"><strong>Expectations a person must judge:</strong></p><ul class="tight small">${e.expected_notes.map(n=>`<li>${esc(n)}</li>`).join('')}</ul>`:''}
+    <div class="scroll"><table><thead><tr><th>Area</th><th>Check</th><th>Expected</th><th>Actual</th><th>Result</th></tr></thead><tbody>${e.checks.map(c=>`<tr><td>${esc(c.area)}</td><td>${esc(c.description)}${c.note?`<div class="small muted">Review: ${esc(c.note)}</div>`:''}</td><td class="small">${fmt(c.expected)}</td><td class="small">${fmt(c.actual)}</td><td>${stChip(c.status)}</td></tr>`).join('')}</tbody></table></div></details>`).join('')}`;
+}
+
+/* ---------- audit ---------- */
+function auditPage(){
+  const kinds = [...new Set(D.audit.map(a=>a.kind))], I = D.audit_integrity;
+  const ib = I.status==='ok' ? `<div class="banner live"><strong>Integrity: chain intact.</strong> ${esc(I.message)}. Each entry's SHA-256 hash covers its content and the previous hash, so editing, deleting, inserting or reordering an entry is detectable, and the head hash stored with the run catches entries cut off the end. Someone who rewrites the whole log and the run record can reseal it: this is tamper-evident, not tamper-proof. The log was sealed after the run finished. Re-check with <code>python -m backend.agents.audit verify data/runs/${esc(D.run_id)}/audit.jsonl</code>.</div>`
+    : I.status==='broken' ? `<div class="banner esc"><strong>Integrity: BROKEN.</strong> ${esc(I.message)}</div>` : `<div class="banner warn"><strong>Integrity: not sealed.</strong> ${esc(I.message)}</div>`;
+  const RS = Object.entries(D.review_status), pending = RS.filter(([k,v])=>!v).length, RI = D.review_integrity;
+  const rv = `<h3>Human review</h3><p class="small">${RS.length} items need or allow a human decision: <strong>${RS.length-pending} decided</strong>, <strong>${pending} open</strong>. ${RI.status==='ok'?'Review chain intact.':RI.status==='none'?'':'<strong>Review chain: '+esc(RI.status)+' ('+esc(RI.message)+')</strong>'} Open items are decided on the Patient record page.</p>` +
+    (D.reviews.length ? `<div class="cardgrid">${D.reviews.map(r=>`<div class="item done"><div class="top2"><span class="chip ${r.decision==='override'?'st-differs':r.decision==='uphold'?'ok':'st-review'}">${esc(r.decision)}</span><code>${esc(r.item_id)}</code><span class="small muted">#${r.seq} · ${esc(r.recorded_at)}</span></div>
+      <div class="small">${esc(r.item_summary)}</div><div>${esc(r.reason)}</div><div class="small muted">${esc(r.reviewer)} (${esc(r.role_as_stated)}, role as stated, not verified)${r.supersedes?' · supersedes #'+r.supersedes:''}</div></div>`).join('')}</div>` : '<p class="small muted">No human review has been recorded for this run.</p>');
+  document.getElementById('auditpage').innerHTML = `<h2>Audit trail</h2><p class="muted">What each component received, did and produced, with the evidence it used. No hidden model reasoning is recorded.</p>${ib}${rv}
+   <h3>Agent and system entries (${D.audit.length})</h3><div class="controls"><label class="small">Event <select id="af"><option value="all">All</option>${EV.map(e=>`<option value="${e.seq}">${esc(dayLab(e.seq))}</option>`).join('')}</select></label>
+   <label class="small">Kind <select id="ak"><option value="all">All</option>${kinds.map(k=>`<option>${esc(k)}</option>`).join('')}</select></label><button id="aexp">Export JSONL</button></div><div id="alist"></div>`;
+  const draw = () => {
+    const ev = document.getElementById('af').value, k = document.getElementById('ak').value;
+    const rows = D.audit.filter(a=>(ev==='all'||a.event_seq===+ev)&&(k==='all'||a.kind===k));
+    document.getElementById('alist').innerHTML = rows.map(a=>{
+      const extra = a.kind==='llm_call' ? `<div class="small muted">model ${esc(a.model)} · ${a.cached?'from cache':'network'} · ${esc(a.attempts)} attempt(s)</div><details><summary>request / response</summary><blockquote>${esc(a.request)}</blockquote><blockquote>${esc(a.response)}</blockquote></details>` : '';
+      return `<div class="small" style="margin:6px 0"><span class="chip neutral">${esc(a.kind)}</span> <span class="muted">${a.event_seq?esc(dayLab(a.event_seq)):'setup'}</span> <strong>${esc(a.actor)}</strong> · ${esc(a.summary)}${extra}</div>`;}).join('') || '<p class="muted">No entries.</p>';
+  };
+  document.getElementById('aexp').onclick = () => {
+    const blob = new Blob([D.audit.map(a=>JSON.stringify(a)).join('\n')+'\n'], {type:'application/x-ndjson'});
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `audit-${D.run_id}.jsonl`; a.click(); URL.revokeObjectURL(a.href);
+  };
+  document.getElementById('af').onchange = draw; document.getElementById('ak').onchange = draw; draw();
+}
+
+/* ---------- gaps ---------- */
+function gapsPage(){
+  document.getElementById('gaps').innerHTML = '<h2>Policy and standards gaps found</h2><p class="muted">Where the rules are silent, conflict or leave responsibility unclear. Each statement is checked against the ingested text; absence claims come with full-text scans in the report. Absence in our knowledge base is not proof that no rule exists.</p>' + D.gaps.map(g=>`<div class="item" style="margin-bottom:12px"><h3 style="text-transform:none;font-size:15px;color:var(--text);margin:0 0 4px"><span class="chip new">${esc(g.id)}</span> ${esc(g.title)}</h3>
+   <p>${esc(g.statement)}</p><p class="small"><strong>Why it matters here:</strong> ${esc(g.relevance)}<br><strong>Recommendation:</strong> ${esc(g.recommendation)}<br><span class="muted">Origin: ${esc(g.origin)} Caveats: ${esc(g.caveats)}</span></p>
+   <details><summary>Evidence (${g.evidence.length})${g.comparison.length?' and international comparison':''}</summary>${g.evidence.map(x=>`<div class="small"><strong>${esc(x.label)}</strong>${citation(x.chunk_id)}</div>`).join('')}${g.comparison.map(x=>`<div class="small"><strong>Comparison: ${esc(x.label)}</strong>${citation(x.chunk_id)}</div>`).join('')}</details></div>`).join('');
+}
+
+/* ---------- about ---------- */
+function aboutPage(){
+  const nodes = [['Orchestrator','Plain-Python coordinator. Takes each update in order and logs every handoff.',1],
+    ['Medication Safety Agent','A deterministic engine finds issues; the language model only explains them.'],
+    ['Policy & Legal Adviser','Searches the UAE policy knowledge base and returns requirements with citations.'],
+    ['Consent module','Grants, expiry, withdrawal, opt-out and emergency access, called as a tool.']];
+  document.getElementById('about').innerHTML = `<h2>About this prototype</h2>
+   <p>This workspace shows what a clinician would see for one synthetic patient whose medicines come from three hospitals in two emirates. It highlights medication-safety alerts, shows which data may be used and why, and puts decisions that a rule cannot settle in front of a person.</p>
+   <h3>Who does what</h3><div class="flow">${nodes.map(([n,d,c])=>`<div class="node"><b>${n}</b><span class="small muted">${d}</span></div>`).join('')}</div>
+   <h3>What this page is, and is not</h3><ul class="tight">
+    <li>It displays a <strong>recorded run</strong>${D.server?'; the only thing the running app adds is recording human review decisions':''}. It calls no model and cannot change consent or any finding.</li>
+    <li>The medication knowledge base is a small team-curated demonstration set, not clinically validated or reviewed by a clinician.</li>
+    <li>Policy texts are English only (the Arabic originals prevail legally) and may have been superseded; the Policy adviser is not legal advice.</li>
+    <li>Free-tier language model; no authentication or encryption; synthetic data only.</li>
+    <li>Not built: patient-facing application, real hospital integration, live agent runs from this page.</li></ul>`;
+}
+
+/* ---------- routing ---------- */
+function renderAll(){
+  const h = location.hash.replace(/^#/,'');
+  let page = 'workspace';
+  let m = h.match(/^(?:record\/)?(\d)(?:\/\w+)?$/);
+  if (m && +m[1]>=1 && +m[1]<=EV.length) asOf = +m[1];
+  else if (['workspace','evaluation','audit','gaps','about'].includes(h)) page = h;
+  document.querySelectorAll('.page').forEach(s=>s.classList.toggle('active', s.id==='page-'+page));
+  drawNav(page);
+  patientCard(); alertsCard(); medsCard(); accessCard(); decisionsCard(); policyCard();
+  evaluationPage(); auditPage(); gapsPage(); aboutPage();
+}
+document.getElementById('theme').onclick=()=>{const r=document.documentElement,dark=getComputedStyle(r).getPropertyValue('--bg').trim()==='#0f161a';r.dataset.theme=dark?'light':'dark'};
+window.addEventListener('hashchange', ()=>{renderAll();window.scrollTo(0,0)});
+serverMode = !!D.server;
+renderAll();
+if (serverMode) fetch('/api/reviews').then(r=>r.json()).then(j=>{applyReviewState(j);renderAll()}).catch(()=>{});
+</script>
+</body>
+</html>

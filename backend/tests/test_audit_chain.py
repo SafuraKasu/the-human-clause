@@ -48,3 +48,11 @@ def test_write_and_read_roundtrip(tmp_path):
     p = tmp_path / "audit.jsonl"
     t.write_jsonl(p)
     assert verify(read_jsonl(p))["status"] == "ok"
+
+
+def test_truncation_is_caught_when_the_head_hash_is_recorded():
+    from backend.agents.audit import head_hash, seal, verify
+    sealed = seal([{"seq": i, "x": i} for i in range(1, 6)])
+    head = head_hash(sealed)
+    assert verify(sealed, expected_head=head)["status"] == "ok"
+    assert verify(sealed[:-1], expected_head=head)["status"] == "broken"

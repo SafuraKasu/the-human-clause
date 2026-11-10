@@ -68,8 +68,9 @@ def head_hash(entries: list[dict]) -> str:
     return entries[-1]["hash"] if entries and "hash" in entries[-1] else ""
 
 
-def verify(entries: list[dict], genesis: str = GENESIS) -> dict:
-    """Check a trail. Returns {status: ok|broken|unsealed, entries, first_bad_seq, message}."""
+def verify(entries: list[dict], genesis: str = GENESIS, expected_head: str = "") -> dict:
+    """Check a trail. Returns {status: ok|broken|unsealed, entries, first_bad_seq, message}.
+    If `expected_head` (recorded elsewhere, e.g. in run.json) is given, entries cut off the end are detected too."""
     if not entries:
         return {"status": "unsealed", "entries": 0, "first_bad_seq": None, "message": "empty trail"}
     if not any("hash" in e for e in entries):
@@ -81,12 +82,32 @@ def verify(entries: list[dict], genesis: str = GENESIS) -> dict:
             return {"status": "broken", "entries": len(entries), "first_bad_seq": e.get("seq", i + 1),
                     "message": f"chain breaks at entry {e.get('seq', i + 1)}: content or order was changed"}
         prev = e["hash"]
+    if expected_head and prev != expected_head:
+        return {"status": "broken", "entries": len(entries), "first_bad_seq": None,
+                "message": "head hash differs from the one recorded in run.json: entries were removed from the end or the log was replaced"}
     return {"status": "ok", "entries": len(entries), "first_bad_seq": None,
             "message": f"{len(entries)} entries, chain intact (head {prev[:12]}...)"}
 
 
 def read_jsonl(path: Path) -> list[dict]:
     return [json.loads(l) for l in Path(path).read_text(encoding="utf-8-sig").splitlines() if l.strip()]
+
+
+def _recorded_head(audit_path) -> str:
+    """Head hash stored in run.json next to the audit file, if any."""
+    f = Path(audit_path).with_name("run.json")
+    try:
+        return json.loads(f.read_text(encoding="utf-8")).get("audit_head_hash", "")
+    except (OSError, ValueError):
+        return ""
+
+
+def _store_head(audit_path) -> None:
+    f = Path(audit_path).with_name("run.json")
+    if f.exists():
+        d = json.loads(f.read_text(encoding="utf-8"))
+        d["audit_head_hash"] = head_hash(read_jsonl(audit_path))
+        f.write_text(json.dumps(d, indent=1, ensure_ascii=False), encoding="utf-8")
 
 
 def main(argv=None) -> int:
@@ -98,9 +119,10 @@ def main(argv=None) -> int:
     entries = read_jsonl(a.file)
     if a.command == "seal":
         write_sealed(entries, a.file)
+        _store_head(a.file)
         print(f"sealed {len(entries)} entries in {a.file}")
         return 0
-    r = verify(entries)
+    r = verify(entries, expected_head=_recorded_head(a.file))
     print(f"{r['status'].upper()}: {r['message']}")
     return 0 if r["status"] == "ok" else 1
 

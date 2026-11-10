@@ -36,7 +36,7 @@ Healthcare, medication safety. Fatima Hassan, 72 (synthetic), has kidney disease
 | ML Intent | Describes the ML application, its data needs, constraints and characteristics; input to the MLFO. | Scenario definition (events, expected outcomes) plus written agent mandates in `docs/agents.md` play this role informally; there is no formal metalanguage. | **partial** |
 | ML sandbox subsystem | Lets operators study ML outputs on simulated underlay networks before deploying live. | Scenario replay with synthetic hospitals, mock and live LLM modes, and expected-versus-actual evaluation. Nothing is deployed live. | **implemented** |
 | Management subsystem | Extends network management and orchestration to the ML pipeline nodes. | Append-only audit trail and evaluator record what each node did. No resource or lifecycle management. | **partial** |
-| Security considerations | Prevent unauthorized access to, and data leaking from, an ML pipeline. | Consent module and audit log; citation guards against invented sources. Not implemented: authentication, encryption, tamper-proof log storage. Synthetic data only. | **partial** |
+| Security considerations | Prevent unauthorized access to, and data leaking from, an ML pipeline. | Consent module and audit log; citation guards against invented sources. Audit log is tamper-evident (hash chain), not tamper-proof. Not implemented: authentication, encryption, protected log storage. Synthetic data only. | **partial** |
 
 *Y.3172 addresses machine learning in future networks (IMT-2020). We apply its pipeline concepts by analogy to a health-data agent system; the mapping explains how our architecture corresponds to it and does not claim network-level conformance.*
 
@@ -62,7 +62,7 @@ Healthcare, medication safety. Fatima Hassan, 72 (synthetic), has kidney disease
 | R3 Confidentiality of health data | Federal ICT Health Law Art. 4 | Category-level access control; outputs only to authorised requesters. No encryption in the prototype. | **partial** |
 | R3 Minimum necessary sharing | DHA Health Information Sharing Policy 4.5.5 | Grants are limited to data categories (medications, labs, allergies, conditions). No field-level minimisation. | **partial** |
 | R4 Emergency access | Executive Regulation Art. 6(3); Federal ICT Health Law Art. 16(3); DHA Consent Standard 17.2.1; DoH HIE Policy 6.1.4; DHA Consent Standard 9.7 (limit) | Break-the-glass needs a clinician and a written justification and is always flagged; blocked and escalated when the patient opted out of the source's exchange. See gap G2. | **implemented** |
-| R6 Audit and logging | DHA Consent Standard 17.6; DoH HIE Policy 6.1.3.13 | Append-only consent log and orchestration audit trail, exported as JSON lines. Immutability is by API only; storage is not tamper-proof. | **partial** |
+| R6 Audit and logging | DHA Consent Standard 17.6; DoH HIE Policy 6.1.3.13 | Append-only consent log and orchestration audit trail, exported as JSON lines. The audit trail is sealed as a SHA-256 hash chain with its head hash recorded in run.json, so edits, deletions, reordering and truncation are detectable; it is tamper-evident, not tamper-proof, and the recorded run was sealed after it finished. | **partial** |
 | R7 AI supervised and overridable | DHA AI Policy 4.4.1; DHA AI Policy 4.4.2 | Advisory only; no automatic action; escalation to a human. Override is implicit (nothing is enforced), not a built feature. | **implemented** |
 | R7 Accountability and appeals (not met) | DHA AI Policy 4.2.1; DHA AI Policy 4.2.3 | Agent mandates are documented, but there is no accountability agreement and no appeals procedure. | **not implemented** |
 | R7 Independent validation (not met) | DHA AI Policy 4.3.3 | No independent validation. Safety rules are a team-curated demonstration KB, not clinically validated. | **not implemented** |
@@ -169,7 +169,7 @@ The ICT Health Law restricts storing or processing health data outside the State
 ## Limitations and honest status
 
 - The medication knowledge base is a **small team-curated demonstration set** (4 interactions, 2 contraindications, 2 lab rules, 13 ingredients), not clinically validated and not reviewed by a clinician.
-- No independent validation, authentication, encryption or tamper-proof logging; no real hospital integration; synthetic data only.
+- No independent validation, authentication or encryption; audit log is tamper-evident (hash chain, sealed after the run) but not tamper-proof; no real hospital integration; synthetic data only.
 - The policy KB holds English text only (Arabic originals prevail legally). Not ingested: Abu Dhabi's AI policy and Responsible AI Standard (download failed), and Ministerial Decision 51 of 2021.
 - The language model is a free-tier Gemini model; outputs vary between runs, so results come from a recorded run that is replayable from cache.
 - Policy findings are retrieval-based summaries of what the texts say, not legal advice. Absence in the KB is not absence in law.

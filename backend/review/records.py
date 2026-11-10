@@ -64,8 +64,8 @@ def read_reviews(run_dir: Path) -> list[dict]:
 def check(run_dir: Path) -> dict:
     """Integrity of the review chain, and that it was made against this run's current audit trail."""
     run_dir = Path(run_dir)
-    _, audit = _load(run_dir)
-    a = verify(audit)
+    run, audit = _load(run_dir)
+    a = verify(audit, expected_head=run.get("audit_head_hash", ""))
     if a["status"] != "ok":
         return {"status": "audit_" + a["status"], "message": "the run's audit trail is not intact: " + a["message"], "entries": 0}
     reviews = read_reviews(run_dir)
@@ -78,7 +78,7 @@ def check(run_dir: Path) -> dict:
 def record(run_dir: Path, item_id: str, decision: str, reviewer: str, role: str, reason: str) -> dict:
     run_dir = Path(run_dir)
     run, audit = _load(run_dir)
-    if verify(audit)["status"] != "ok":
+    if verify(audit, expected_head=run.get("audit_head_hash", ""))["status"] != "ok":
         raise ReviewError("the run's audit trail is not sealed or not intact; refusing to attach a review to it")
     if check(run_dir)["status"] not in ("none", "ok"):
         raise ReviewError("existing reviews.jsonl is broken; refusing to append to it")
@@ -89,6 +89,8 @@ def record(run_dir: Path, item_id: str, decision: str, reviewer: str, role: str,
         raise ReviewError(f"decision must be one of {sorted(DECISIONS)}")
     if not reviewer.strip() or not role.strip():
         raise ReviewError("reviewer and role are required")
+    if any(ord(c) < 32 or ord(c) == 127 for c in reviewer + role + reason):
+        raise ReviewError("reviewer, role and reason must be plain text (no line breaks or control characters)")
     if len(reason.strip()) < MIN_REASON:
         raise ReviewError(f"a reason of at least {MIN_REASON} characters is required")
     existing = read_reviews(run_dir)

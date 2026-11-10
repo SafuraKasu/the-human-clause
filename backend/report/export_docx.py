@@ -114,7 +114,7 @@ def build_data(v: Verifier, run_dir: Path, run: dict, kb: KnowledgeBase, team: d
                        "The unconfirmed hypothesis was raised at a different event. Each was checked against the source text."]},
             {"heading": "6. Policy gaps and standards gaps derived from the mapping exercise", "paras": gaps + [
                 "**Limitations.** The medication knowledge base is a small team-curated demonstration set, not clinically validated or reviewed by a "
-                "clinician. There is no independent validation, authentication, encryption or tamper-proof logging, and no real hospital integration. "
+                "clinician. There is no independent validation, authentication or encryption, and the audit log is tamper-evident (hash chain, sealed after the run) but not tamper-proof; no real hospital integration. The interface is a clinician workspace over the recorded run (a static page, or a local server that only records human review decisions); agents are not run from it and no patient-facing application is built. "
                 f"The language model is a free-tier Gemini model; the recorded run was served by {', '.join(run['models'])} because the primary model's daily free quota was spent, and the run is replayable from a cached record. "
                 "Policy texts are English only. Not ingested: Abu Dhabi's AI policy and Responsible AI Standard (download failed) and Ministerial "
                 "Decision 51 of 2021. Policy findings summarise what the texts say; they are not legal advice, and absence in our knowledge base is "

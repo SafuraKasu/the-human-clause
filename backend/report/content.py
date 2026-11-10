@@ -48,7 +48,7 @@ Y3172_ROWS = [
      "Append-only audit trail and evaluator record what each node did. No resource or lifecycle management.",
      "partial", [("itu-t-y3172#0034", "management subsystem")]),
     ("Security considerations", "Prevent unauthorized access to, and data leaking from, an ML pipeline.",
-     "Consent module and audit log; citation guards against invented sources. Not implemented: authentication, encryption, tamper-proof log storage. Synthetic data only.",
+     "Consent module and audit log; citation guards against invented sources. Audit log is tamper-evident (hash chain), not tamper-proof. Not implemented: authentication, encryption, protected log storage. Synthetic data only.",
      "partial", [("itu-t-y3172#0038", "Security considerations")]),
 ]
 Y3172_CAVEAT = ("Y.3172 addresses machine learning in future networks (IMT-2020). We apply its pipeline concepts by analogy to a "
@@ -111,7 +111,7 @@ POLICY_ROWS = [
     ("R6 Audit and logging",
      [("DHA Consent Standard 17.6", "dha-consent-access-standard-2025#0030", "detailed audit trail must be documented"),
       ("DoH HIE Policy 6.1.3.13", "doh-hie-policy-2020#0051", "Assure that log files cannot be altered")],
-     "Append-only consent log and orchestration audit trail, exported as JSON lines. Immutability is by API only; storage is not tamper-proof.", "partial"),
+     "Append-only consent log and orchestration audit trail, exported as JSON lines. The audit trail is sealed as a SHA-256 hash chain with its head hash recorded in run.json, so edits, deletions, reordering and truncation are detectable; it is tamper-evident, not tamper-proof, and the recorded run was sealed after it finished.", "partial"),
     ("R7 AI supervised and overridable",
      [("DHA AI Policy 4.4.1", "dha-ai-policy-2021#0008", "safe, secure and supervised/monitored by end users"),
       ("DHA AI Policy 4.4.2", "dha-ai-policy-2021#0008", "overridden or their decisions reversed by designated end users")],
@@ -249,7 +249,7 @@ PIPELINE_ROWS = [
       ("DHA Consent Standard 17.2.1 and 9.7", "dha-consent-access-standard-2025#0018", "should not be retrieved using BTG access"),
       ("DoH HIE Policy 6.1.4", "doh-hie-policy-2020#0054", "break the seal")],
      "implemented"),
-    ("D", "Orchestrator routes results and records every handoff in an append-only audit trail (not tamper-proof storage).",
+    ("D", "Orchestrator routes results and records every handoff in an append-only, hash-chained audit trail (tamper-evident, not tamper-proof).",
      "Dim 5 Level of Integration of AI in Workflows; Dim 3 Cross-domain correlation analysis",
      [("itu-ai-readiness#0027", "Level of Integration of AI in Workflows"), ("itu-ai-readiness#0024", "Cross-domain correlation analysis")],
      [("DHA Consent Standard 17.6", "dha-consent-access-standard-2025#0030", "detailed audit trail must be documented"),

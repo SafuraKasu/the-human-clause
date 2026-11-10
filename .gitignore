@@ -5,3 +5,4 @@ __pycache__/
 node_modules/
 *.db
 .claude/settings.local.json
+data/runs/*/reviews.jsonl
